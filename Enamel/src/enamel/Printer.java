@@ -1,14 +1,16 @@
 package enamel;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Printer {
 	
 	private File file;
-	private FileOutputStream output;
+	private FileWriter fileWriter;
+	private PrintWriter printWriter;
 	private ArrayList<String> lines = new ArrayList<>();
 	private BrailleInterpreter interpreter = new BrailleInterpreter();
 	private String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR",
@@ -29,7 +31,8 @@ public class Printer {
 	 */
 	public Printer(String fileName, int cells, int buttonsAvailable) throws IOException, OddSpecialCharacterException {
 		file = new File(fileName);
-		output = new FileOutputStream(file, true);
+		fileWriter = new FileWriter(fileName);
+		printWriter = new PrintWriter(fileWriter);
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
 		this.cells = cells;
@@ -61,7 +64,7 @@ public class Printer {
 		setPins(block.letter);
 		addSpoken(block.premise);
 		addInputBlock(block.buttonsUsed);
-		for(int i = 1; i < block.buttonsUsed; i++) {
+		for(int i = 1; i <= block.buttonsUsed; i++) {
 			addResponse((block.answer == i) ? block.correctResponse : block.wrongResponse, i, (block.answer == i));
 		}
 		newLine();
@@ -79,12 +82,11 @@ public class Printer {
 	 * @throws IOException - Required by Java
 	 */
 	public void print() throws IOException {
-		addNext();
-		clearPins();
 		for(String line : lines) {
-			byte[] temp = line.getBytes();
-			output.write(temp);
+			printWriter.print(line);
 		}
+		printWriter.flush();
+		printWriter.close();
 	}
 	
 	//Adds line starting with /~, string, ends with newline character
@@ -92,7 +94,17 @@ public class Printer {
 		lines.add("/~" + line + "\n");
 	}
 	
-	//Adds line with string, ends with newline character
+	/**
+	 * Recursive algorithm paired with arrowTags and asteriskTags
+	 * 
+	 * If the input string doesn't have asterisks or arrow brackets, it
+	 * prints it as spoken text. If not, it sends the line to arrowTags or
+	 * asteriskTags to be parsed accordingly. Those methods make recursive 
+	 * calls back to addSpoken
+	 * 
+	 * @param line
+	 * @throws OddSpecialCharacterException
+	 */
 	private void addSpoken(String line) throws OddSpecialCharacterException {
 		
 		if(!line.contains("*") && !line.contains("<") && !line.contains(">")) {
@@ -108,6 +120,7 @@ public class Printer {
 		}
 		
 	}
+	
 	
 	private void arrowTags(String line) throws OddSpecialCharacterException {
 		

@@ -17,6 +17,7 @@ import enamel.Block;
 import enamel.BrailleInterpreter;
 import enamel.InvalidBlockException;
 import enamel.InvalidCellException;
+import enamel.OddSpecialCharacterException;
 import enamel.Printer;
 
 public class testPrinter {
@@ -54,7 +55,7 @@ public class testPrinter {
 	public void checkBlock(Block block) throws InvalidCellException {
 		if(first) first = false;
 		else assertEquals("/~NEXTT", reader.nextLine());
-		assertEquals("/~disp-cell-clear:0", reader.nextLine());
+		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-cell-pins:0 " + interpreter.getPins(block.letter), reader.nextLine());
 		assertEquals(block.premise, reader.nextLine());
 		assertEquals("/~skip-button:0 ONEE", reader.nextLine());
@@ -73,7 +74,7 @@ public class testPrinter {
 	
 	//Tests for file creation/reading exceptions, also checks that the initial block is printed correctly
 	@Test
-	public void testInitial1() {
+	public void testInitial1() throws OddSpecialCharacterException {
 		
 		try {
 			printer = new Printer("test.txt", 1, 4);
@@ -98,7 +99,8 @@ public class testPrinter {
 	}
 	
 	@Test
-	public void test1Block() throws IOException, InvalidBlockException, InvalidCellException {
+	public void test1Block() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
+		System.out.println("test");
 		printer = new Printer("test.txt");
 		Block tBlock = new Block("name", "hi", "yes", "no", 1, 'c', 2);
 		printer.addBlock(tBlock);
@@ -110,7 +112,7 @@ public class testPrinter {
 	}
 	
 	@Test
-	public void test2Block() throws IOException, InvalidBlockException, InvalidCellException {
+	public void test2Block() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
 		printer = new Printer("test.txt", 1, 4);
 		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c');
 		Block tBlock2 = new Block("name", "hello", "yep", "nope", 2, 'd');
@@ -125,7 +127,7 @@ public class testPrinter {
 	}
 	
 	@Test
-	public void testBlockList1() throws IOException, InvalidBlockException, InvalidCellException {
+	public void testBlockList1() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
 		printer = new Printer("test.txt", 1, 4);
 		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c', 2);
 		Block tBlock2 = new Block("name", "hello", "yep", "nope", 2, 'd', 2);
@@ -142,7 +144,7 @@ public class testPrinter {
 	}
 	
 	@Test
-	public void testBlockList2() throws IOException, InvalidBlockException, InvalidCellException {
+	public void testBlockList2() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
 		printer = new Printer("test.txt", 1, 4);
 		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c', 2);
 		ArrayList<Block> blockList = new ArrayList<>();

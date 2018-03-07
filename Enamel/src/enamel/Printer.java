@@ -61,8 +61,8 @@ public class Printer {
 		if(first) first = false;
 		else addNext();
 		clearPins();
-		setPins(block.letter);
-		addSpoken(block.premise);
+		displayString(block.cells);
+		addSpoken(block.story);
 		addInputBlock(block.buttonsUsed);
 		for(int i = 1; i <= block.buttonsUsed; i++) {
 			addResponse((block.answer == i) ? block.correctResponse : block.wrongResponse, i, (block.answer == i));
@@ -121,11 +121,25 @@ public class Printer {
 		
 	}
 	
-	
+	/**
+	 * Recursive method used by addSpoken, acts as one of the recursive cases
+	 * 
+	 * @param line
+	 * @throws OddSpecialCharacterException
+	 */
 	private void arrowTags(String line) throws OddSpecialCharacterException {
 		
 		if(!line.contains("<") && line.contains(">")) throw new OddSpecialCharacterException();
 		if(line.contains("<") && !line.contains(">")) throw new OddSpecialCharacterException();
+		
+		String testLine = line;
+		
+		while(testLine.contains("<") || testLine.contains(">")) {
+			if(!testLine.contains("<") && testLine.contains(">")) throw new OddSpecialCharacterException();
+			if(testLine.contains("<") && !testLine.contains(">")) throw new OddSpecialCharacterException();
+			testLine = testLine.replaceFirst("<", "");
+			testLine = testLine.replaceFirst(">", "");
+		}
 		
 		String[] split = line.split("<");
 		
@@ -134,23 +148,32 @@ public class Printer {
 		for(int i = 1; i < split.length; i++) {
 			
 			String[] superSplit = split[i].split(">");
-			if(superSplit.length != 2) throw new OddSpecialCharacterException();
+			if(superSplit.length > 2 || superSplit[0].contains("\\*")) throw new OddSpecialCharacterException();
 			
 			addSound(superSplit[0].trim());
-			addSpoken(superSplit[1]);
+			if(superSplit.length == 2) addSpoken(superSplit[1]);
 		}
 		
 	}
 	
+	/**
+	 * Recursive method used by addSpoken, acts as a recursive case
+	 * 
+	 * @param line
+	 * @throws OddSpecialCharacterException
+	 */
 	private void asteriskTags(String line) throws OddSpecialCharacterException {
 		
-		String[] split = line.split("*");
+		String[] split = line.split("\\*");
 		
-		if(split.length % 2 == 0) throw new OddSpecialCharacterException();
+		if(split.length % 2 == 0 && split.length > 2) throw new OddSpecialCharacterException();
 		
 		for(int i = 0; i < split.length; i++) {
-			if(i % 2 == 1) addSpoken(split[i]);
-			else displayString(split[i]);
+			if(i % 2 == 0) addSpoken(split[i]);
+			else {
+				if(split[i].contains("<") || split[i].contains(">")) throw new OddSpecialCharacterException();
+				displayString(split[i]);
+			}
 		}
 		
 	}

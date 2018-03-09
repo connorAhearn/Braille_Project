@@ -17,7 +17,7 @@ public class Printer {
 			"FIVEE", "SIXX", "SEVENN", "EIGHTT", "NINEE", "TENN", "ELEVENN",
 			"TWELVEE"};
 	private boolean first = true;
-	private int cells;
+	private int cellsAmt;
 	private int buttons;
 	
 	/**
@@ -28,14 +28,15 @@ public class Printer {
 	 * @param buttonsAvailable - Number of buttons available on the machine
 	 * @throws IOException - Required by Java
 	 * @throws OddSpecialCharacterException 
+	 * @throws InvalidBlockException 
 	 */
-	public Printer(String fileName, int cells, int buttonsAvailable) throws IOException, OddSpecialCharacterException {
+	public Printer(String fileName, int cells, int buttonsAvailable) throws IOException, OddSpecialCharacterException, InvalidBlockException {
 		file = new File(fileName);
 		fileWriter = new FileWriter(fileName);
 		printWriter = new PrintWriter(fileWriter);
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
-		this.cells = cells;
+		this.cellsAmt = cells;
 		this.buttons = buttonsAvailable;
 	}
 	
@@ -45,8 +46,9 @@ public class Printer {
 	 * @param fileName - Name of the file the scenario will be saved as
 	 * @throws IOException - Required by Java
 	 * @throws OddSpecialCharacterException 
+	 * @throws InvalidBlockException 
 	 */
-	public Printer(String fileName) throws IOException, OddSpecialCharacterException {
+	public Printer(String fileName) throws IOException, OddSpecialCharacterException, InvalidBlockException {
 		this(fileName, 1, 4);
 	}
 	
@@ -56,8 +58,9 @@ public class Printer {
 	 * @param block - Single block to be printed to the text file. 
 	 * @throws InvalidCellException 
 	 * @throws OddSpecialCharacterException 
+	 * @throws InvalidBlockException 
 	 */
-	public void addBlock(Block block) throws InvalidCellException, OddSpecialCharacterException {
+	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException {
 		if(first) first = false;
 		else addNext();
 		clearPins();
@@ -70,7 +73,7 @@ public class Printer {
 		newLine();
 	}
 	
-	public void addBlockList(ArrayList<Block> blocks) throws InvalidCellException, OddSpecialCharacterException {
+	public void addBlockList(ArrayList<Block> blocks) throws OddSpecialCharacterException, InvalidBlockException {
 		for(Block block : blocks) {
 			addBlock(block);
 		}
@@ -104,8 +107,9 @@ public class Printer {
 	 * 
 	 * @param line
 	 * @throws OddSpecialCharacterException
+	 * @throws InvalidBlockException 
 	 */
-	private void addSpoken(String line) throws OddSpecialCharacterException {
+	private void addSpoken(String line) throws OddSpecialCharacterException, InvalidBlockException {
 		
 		if(!line.contains("*") && !line.contains("<") && !line.contains(">")) {
 			lines.add(line + "\n");
@@ -126,8 +130,9 @@ public class Printer {
 	 * 
 	 * @param line
 	 * @throws OddSpecialCharacterException
+	 * @throws InvalidBlockException 
 	 */
-	private void arrowTags(String line) throws OddSpecialCharacterException {
+	private void arrowTags(String line) throws OddSpecialCharacterException, InvalidBlockException {
 		
 		if(!line.contains("<") && line.contains(">")) throw new OddSpecialCharacterException();
 		if(line.contains("<") && !line.contains(">")) throw new OddSpecialCharacterException();
@@ -161,8 +166,9 @@ public class Printer {
 	 * 
 	 * @param line
 	 * @throws OddSpecialCharacterException
+	 * @throws InvalidBlockException 
 	 */
-	private void asteriskTags(String line) throws OddSpecialCharacterException {
+	private void asteriskTags(String line) throws OddSpecialCharacterException, InvalidBlockException {
 		
 		String[] split = line.split("\\*");
 		
@@ -185,7 +191,7 @@ public class Printer {
 	
 	//Inserts initial block to file declaring cells and buttons on machine
 	//buttonsAvailable refers to how many buttons are on the simulator / machine
-	private void initialBlock(int cells, int buttonsAvailable) throws OddSpecialCharacterException {
+	private void initialBlock(int cells, int buttonsAvailable) throws OddSpecialCharacterException, InvalidBlockException {
 		addSpoken("Cell " + cells);
 		addSpoken("Button " + buttonsAvailable);
 		newLine();
@@ -241,12 +247,12 @@ public class Printer {
 		addConfig("reset-buttons");
 	}
 	
-	private void displayChar(char c) {
-		addConfig("disp-cell-char:" + c);
-	}
-	
-	private void displayString(String in) {
-		addConfig("disp-string:" + in);
+	private void displayString(String in) throws InvalidBlockException {
+		if(in.length() <= this.cellsAmt) addConfig("disp-string:" + in);
+		else {
+			throw new InvalidBlockException("The length of the string is too long for the Braille Cells to represent");
+		}
+		
 	}
 	
 	//Input declaring portion of a block
@@ -260,7 +266,7 @@ public class Printer {
 	
 	//Spoken is the spoken response, button is the button that creates the response
 	//NOTE: button refers to the number displayed on the box / simulation. 1 = 1
-	private void addResponse(String spoken, int button, boolean correct) throws OddSpecialCharacterException {
+	private void addResponse(String spoken, int button, boolean correct) throws OddSpecialCharacterException, InvalidBlockException {
 		addConfig(buttonLabels[button-1]);
 		addAnswerSound(correct);
 		addSpoken(spoken);

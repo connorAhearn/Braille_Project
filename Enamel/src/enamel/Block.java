@@ -12,7 +12,7 @@ public class Block {
 	public int buttonsUsed;
 	
 	/**
-	 * Main Constructor
+	 * (Old) Main Constructor
 	 * 
 	 * @param story - String containing the Question / Story
 	 * @param correct - String containing the message stated for the correct answer
@@ -23,21 +23,11 @@ public class Block {
 	 * @throws InvalidBlockException 
 	 */
 	public Block(String name, String story, String correct, String wrong, int answer, char letter, int buttonsUsed) throws InvalidBlockException {
-		
-		//Throws an exception if any of the 3 conditions are met
-		if(name.equals("") || story.equals("") || answer > buttonsUsed || answer < 0 || answer > buttonsUsed) throw new InvalidBlockException();
-		
-		this.name = name;
-		this.story = story;
-		correctResponse = correct;
-		wrongResponse = wrong;
-		this.answer = answer;
-		this.cells = Character.toString(letter);
-		this.buttonsUsed = buttonsUsed;
+		this(name, story, correct, wrong, answer, Character.toString(letter), buttonsUsed);
 	}
 	
 	/**
-	 * Simplified Constructor - Assumes buttons used to be 2.
+	 * (Old) Simplified Constructor - Assumes buttons used to be 2.
 	 * 
 	 * @param story - String containing the Question / Story
 	 * @param correct - String containing the message stated for the correct answer
@@ -50,9 +40,24 @@ public class Block {
 		this(name, story, correct, wrong, answer, letter, 2);
 	}
 	
+	/**
+	 * String constructor - Old constructor modified to take strings instead of single characters.
+	 * 
+	 * @param name - Name of the section
+	 * @param story - String containing section's story
+	 * @param correct - String containing message for the right answer
+	 * @param wrong - String containing message for wrong answer
+	 * @param answer - Number for correct button
+	 * @param cells - String to come up on the braille cells
+	 * @param buttonsUsed - How many buttons the section uses
+	 * @throws InvalidBlockException - Thrown when invalid paramaters are passed to the constructor
+	 */
 	public Block(String name, String story, String correct, String wrong, int answer, String cells, int buttonsUsed) throws InvalidBlockException {
 		
-		if(name.equals("") || story.equals("") || answer > buttonsUsed || answer < 0 || answer > buttonsUsed) throw new InvalidBlockException();
+		if(name.equals("")) throw new InvalidBlockException("Section doesn't have a name");
+		if(story.equals("")) throw new InvalidBlockException("Story field is empty");
+		if(answer > buttonsUsed) throw new InvalidBlockException("Answer button is outside the range of available buttons");
+		if(answer < 0) throw new InvalidBlockException("Answer button can't have a negative number");
 		
 		this.name = name;
 		this.story = story;

@@ -13,13 +13,16 @@ public class Loader {
 
 	public Loader(File read) {
 	try {
-		 holdOn = new Block(" ", " ", " ", " ", 1, a, 1);
+		 holdOn = new Block(" ", " ", " ", " ", 1, a, 0);
 		}
-		catch (InvalidBlockException e) {}
+		catch (InvalidBlockException e) {
+			e.printStackTrace(); 
+			System.out.println(e.getMessage());
+		}
 	}
 	
-	private void setPremise(String p) {
-		holdOn.premise = p;
+	private void setStory(String s) {
+		holdOn.story = s;
 	}
 	
 	private void setCorrect(String c) {

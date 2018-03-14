@@ -5,10 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,6 +24,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -45,7 +48,6 @@ public class ScenarioCreator extends Application {
 
 		// Adding components to GUI (component, column, row, column span, row span)
 
-		
 		// GUI for start Window / primary stage
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
@@ -68,7 +70,6 @@ public class ScenarioCreator extends Application {
 		testButton.setAccessibleText("To test a scenario press enter");
 		layout1.add(testButton, 3, 6);
 
-		
 		// GUI for scenario Creator
 		Stage scenarioCreator = new Stage();
 		GridPane layout = new GridPane();
@@ -83,7 +84,6 @@ public class ScenarioCreator extends Application {
 		layout.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		
 		// File menu
 		Menu fileMenu = new Menu("File");
 
@@ -127,6 +127,22 @@ public class ScenarioCreator extends Application {
 		nameSectionLabel.setVisible(false);
 		layout.add(nameSectionLabel, 0, 1);
 
+		// number of answer buttons used
+		TextField answerButtonsUsedField = new TextField();
+		answerButtonsUsedField.setPrefWidth(30);
+		layout.add(answerButtonsUsedField, 3, 1);
+
+		Text answerButtonsUsedText = new Text("Answer Buttons Used");
+		answerButtonsUsedText.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
+		answerButtonsUsedText.setFill(Color.GHOSTWHITE);
+		layout.add(answerButtonsUsedText, 4, 1);
+
+		// accessibility for answer buttons used field
+		Label answerButtonsUsedFieldLabel = new Label("Enter the number\n of answer buttons \n you want to use");
+		answerButtonsUsedFieldLabel.setLabelFor(answerButtonsUsedField);
+		answerButtonsUsedFieldLabel.setVisible(false);
+		layout.add(answerButtonsUsedFieldLabel, 3, 1);
+
 		// Story text area
 		Text story = new Text(" Story");
 		story.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -167,22 +183,23 @@ public class ScenarioCreator extends Application {
 		Text answer = new Text("Answer");
 		answer.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
 		answer.setFill(Color.WHITE);
-		layout.add(answer, 5, 7);
+		layout.add(answer, 4, 7);
 
 		TextField answerText = new TextField();
 		answerText.setPrefWidth(50);
-		layout.add(answerText, 4, 7);
+		layout.add(answerText, 3, 7);
 
 		// accessibility for answer field
 		Label answerLabel = new Label("Enter the button\nnumber users should\npress for the\ncorrect response");
 		answerLabel.setLabelFor(answerText);
 		answerLabel.setVisible(false);
-		layout.add(answerLabel, 5, 7);
+		layout.add(answerLabel, 3, 7);
 
 		// sound button
 		Button sound = new Button("Sound");
 		sound.setAccessibleRoleDescription("Sound button");
 		sound.setAccessibleText("Sound option is currently not available in this version");
+		sound.setStyle("-fx-base: #87ceeb;"); // sky blue
 		layout.add(sound, 7, 7);
 
 		// Correct text area
@@ -226,8 +243,7 @@ public class ScenarioCreator extends Application {
 		layout.add(incorrectLabel, 0, 8, 8, 4);
 
 		// blank text field for spacing
-		Text blank1 = new Text(
-				"                                  " + "                                               ");
+		Text blank1 = new Text("                                                                ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 7);
 
@@ -235,6 +251,7 @@ public class ScenarioCreator extends Application {
 		Button saveButton = new Button("Save Section");
 		saveButton.setAccessibleRoleDescription("Save button");
 		saveButton.setAccessibleText("Press enter to save section");
+		saveButton.setStyle("-fx-base: #87ceeb;"); // sky blue
 		layout.add(saveButton, 0, 19);
 
 		// ComboBox (drop down menu)
@@ -247,16 +264,112 @@ public class ScenarioCreator extends Application {
 
 		layout.add(comboBox, 9, 0, 5, 1);
 
-		//////////////// Action Events ////////////////////////////
+		/////////////////////////////////////// Action Events
+		/////////////////////////////////////// /////////////////////////////////
+		/////////////////////////////////////// /////////////////////////////////////////////////
+
+		// GUI for incorrect Braille cell entry
+		Stage errorWindow = new Stage();
+		GridPane layout12 = new GridPane();
+		layout12.setHgap(10);
+		layout12.setVgap(10);
+		layout12.setPadding(new Insets(5, 5, 5, 5));
+
+		Scene scene12 = new Scene(layout12);
+		errorWindow.setScene(scene12);
+		errorWindow.setTitle("Error");
+		Text errorMessage = new Text(
+				"You need to have at least one braille cell and one answer button to create a scenario");
+		layout12.add(errorMessage, 0, 0, 2, 1);
+		Button errorMessageButton = new Button("Okay");
+		errorMessageButton.setAccessibleRoleDescription("Okay button");
+		errorMessageButton.setAccessibleText(
+				"You need to have at least one braille cell and one answer button to create a scenario,"
+						+ "press enter to return to previous window");
+		layout12.add(errorMessageButton, 2, 1);
+
+		errorMessageButton.setOnAction(e1 -> {
+			errorWindow.close();
+		});
+		errorMessageButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				errorWindow.close();
+			}
+		});
+
+		// GUI for selecting number of braille cells / answer buttons used
+		Stage brailleCellsUsedWindow = new Stage();
+		GridPane layout11 = new GridPane();
+		layout11.setHgap(10);
+		layout11.setVgap(10);
+		layout11.setPadding(new Insets(5, 5, 10, 5));
+
+		Scene scene11 = new Scene(layout11);
+		brailleCellsUsedWindow.setScene(scene11);
+		brailleCellsUsedWindow.setTitle("Number of Braille Cells Used");
+		Text brailleAndAnswer = new Text("Enter the number of Braille Cells " + "and Answer Buttons available");
+		layout11.add(brailleAndAnswer, 0, 0, 2, 1);
+		TextField brailleCellsField = new TextField();
+		Text brailleCellsText = new Text("Braille Cells");
+		TextField answerButtonsField = new TextField();
+		Text answerButtonsText = new Text("Answer Buttons");
+		layout11.add(brailleCellsField, 0, 1);
+		layout11.add(brailleCellsText, 1, 1);
+		layout11.add(answerButtonsField, 0, 2);
+		layout11.add(answerButtonsText, 1, 2);
+
+		Label brailleCellsUsedLabel = new Label("Enter the \nnumber of \nBraille cells available");
+		brailleCellsUsedLabel.setLabelFor(brailleCellsField);
+		brailleCellsUsedLabel.setVisible(false);
+		layout11.add(brailleCellsUsedLabel, 0, 1);
+
+		Label answerButtonsUsedLabel = new Label("Enter the \nnumber of \nanswer buttons available");
+		answerButtonsUsedLabel.setLabelFor(answerButtonsField);
+		answerButtonsUsedLabel.setVisible(false);
+		layout11.add(answerButtonsUsedLabel, 1, 1);
+
+		Button okayStart = new Button("Okay");
+		okayStart.setAccessibleRoleDescription("Okay button");
+		okayStart.setAccessibleText("Press enter to start creating a scenario");
+		layout11.add(okayStart, 2, 2);
+
+		// open scenario creator or display error message
+
+		okayStart.setOnAction(e -> {
+
+			if (brailleCellsField.getText().matches("[A-z]") || answerButtonsField.getText().matches("[A-z]")
+					|| brailleCellsField.getText().isEmpty() || answerButtonsField.getText().isEmpty()
+					|| Integer.parseInt(brailleCellsField.getText()) < 1
+					|| Integer.parseInt(answerButtonsField.getText()) < 1) {
+				errorWindow.show();
+			} else {
+				scenarioCreator.show();
+				brailleCellsUsedWindow.close();
+			}
+		});
+		okayStart.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+
+				if (brailleCellsField.getText().matches("[A-z]") || answerButtonsField.getText().matches("[A-z]")
+						|| brailleCellsField.getText().isEmpty() || answerButtonsField.getText().isEmpty()
+						|| Integer.parseInt(brailleCellsField.getText()) < 1
+						|| Integer.parseInt(answerButtonsField.getText()) < 1) {
+					errorWindow.show();
+				} else {
+					scenarioCreator.show();
+					brailleCellsUsedWindow.close();
+				}
+			}
+		});
 
 		// starting window action events
 		createButton.setOnAction(e1 -> {
-			scenarioCreator.show();
+			brailleCellsUsedWindow.show();
 			primaryStage.close();
 		});
 		createButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				scenarioCreator.show();
+				brailleCellsUsedWindow.show();
 				primaryStage.close();
 			}
 		});
@@ -298,6 +411,14 @@ public class ScenarioCreator extends Application {
 		sound.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				soundWindow.show();
+			} else {
+				if (e.getCode() == KeyCode.CONTROL) {
+					sound.setOnKeyPressed(e1 -> {
+						if (e1.getCode() == KeyCode.TAB) {
+							correctText.requestFocus();
+						}
+					});
+				}
 			}
 		});
 		soundOkay.setOnKeyPressed(e -> {
@@ -461,9 +582,9 @@ public class ScenarioCreator extends Application {
 		Button nameSaveButton = new Button("Save");
 		layout8.add(nameSaveButton, 1, 1);
 		nameSaveButton.setAccessibleText("Press enter to save scenario and return to main window");
-		
-		
-		// pop up window - warning users that if they select new project all unsaved projects will be lost
+
+		// pop up window - warning users that if they select new project all unsaved
+		// projects will be lost
 		Stage warningWindow = new Stage();
 		GridPane layout10 = new GridPane();
 		layout10.setHgap(10);
@@ -473,19 +594,18 @@ public class ScenarioCreator extends Application {
 		Scene scene10 = new Scene(layout10);
 		warningWindow.setScene(scene10);
 		warningWindow.setTitle("Warning");
-		Text warningText = new Text("	       Are you sure you want to start a new project?\n			any unsaved projects will be lost");
+		Text warningText = new Text(
+				"	       Are you sure you want to start a new project?\n			any unsaved projects will be lost");
 		layout10.add(warningText, 0, 0, 2, 2);
 		Button warningOkay = new Button("Okay");
 		warningOkay.setAccessibleRoleDescription("Okay button");
-		warningOkay
-				.setAccessibleText("Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
+		warningOkay.setAccessibleText(
+				"Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
 		layout10.add(warningOkay, 0, 4);
 		Button warningCancel = new Button("Cancel");
 		warningCancel.setAccessibleRoleDescription("Cancel button");
-		warningCancel
-				.setAccessibleText("Press enter to return to main window");
+		warningCancel.setAccessibleText("Press enter to return to main window");
 		layout10.add(warningCancel, 2, 4);
-		
 
 		// Pop up window : Choose between audio / visual player for testing
 		Stage playerSelectionWindow = new Stage();
@@ -515,7 +635,6 @@ public class ScenarioCreator extends Application {
 		layout9.add(visualButton, 0, 2);
 		layout9.add(audioButton, 1, 2);
 
-
 		// save button
 		// Check if name field is empty
 		// check story field is not empty
@@ -540,8 +659,8 @@ public class ScenarioCreator extends Application {
 									String blockName = nameSectionField.getText();
 
 									if (blockMap.containsKey(blockName)) {
-										blockList.get(blockList.indexOf(
-												(blockMap.get(nameSectionField.getText())))).premise = storyText
+										blockList.get(blockList
+												.indexOf((blockMap.get(nameSectionField.getText())))).story = storyText
 														.getText();
 										blockList.get(blockList.indexOf((blockMap
 												.get(nameSectionField.getText())))).correctResponse = correctText
@@ -563,31 +682,19 @@ public class ScenarioCreator extends Application {
 
 										// save text to block
 
-										int buttonsUsed = 4;
-										if (blockName.equals("") || storyText.equals("")
-												|| Integer.parseInt(answerText.getText()) > buttonsUsed) {
-											try {
-												throw new InvalidBlockException();
-											} catch (InvalidBlockException e2) {
-												// TODO Auto-generated catch block
-												e2.printStackTrace();
-											}
-										} else {
-											Block blockText;
-											try {
-												blockText = new Block(blockName, storyText.getText(),
-														correctText.getText(), incorrectText.getText(),
-														Integer.parseInt(answerText.getText()),
-														brailleText.getText().charAt(0));
-												blockList.add(blockText);
-												blockMap.put(blockName, blockText);
-											} catch (NumberFormatException e2) {
-												// TODO Auto-generated catch block
-												e2.printStackTrace();
-											} catch (InvalidBlockException e2) {
-												// TODO Auto-generated catch block
-												e2.printStackTrace();
-											}
+										Block blockText;
+										try {
+											blockText = new Block(blockName, storyText.getText(), correctText.getText(),
+													incorrectText.getText(), Integer.parseInt(answerText.getText()),
+													brailleText.getText().charAt(0));
+											blockList.add(blockText);
+											blockMap.put(blockName, blockText);
+										} catch (NumberFormatException e2) {
+											// TODO Auto-generated catch block
+											e2.printStackTrace();
+										} catch (InvalidBlockException e2) {
+											// TODO Auto-generated catch block
+											e2.printStackTrace();
 
 										}
 
@@ -613,10 +720,9 @@ public class ScenarioCreator extends Application {
 
 		});
 
-		saveButton.setOnKeyPressed(e -> {
-
-			if (e.getCode() == KeyCode.ENTER) {
-
+		// hot key save section button
+		saveButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), new Runnable() {
+			@Override public void run() {
 				try {
 					int x = Integer.parseInt(answerText.getText());
 					if (x >= 1 && x <= 4) {
@@ -633,16 +739,16 @@ public class ScenarioCreator extends Application {
 
 										if (blockMap.containsKey(blockName)) {
 											blockList.get(blockList.indexOf(
-													(blockMap.get(nameSectionField.getText())))).premise = storyText
+													(blockMap.get(nameSectionField.getText())))).story = storyText
+															.getText();
+											blockList.get(blockList.indexOf((blockMap.get(
+													nameSectionField.getText())))).correctResponse = correctText
+															.getText();
+											blockList.get(blockList.indexOf((blockMap.get(
+													nameSectionField.getText())))).wrongResponse = incorrectText
 															.getText();
 											blockList.get(blockList.indexOf((blockMap
-													.get(nameSectionField.getText())))).correctResponse = correctText
-															.getText();
-											blockList.get(blockList.indexOf((blockMap
-													.get(nameSectionField.getText())))).wrongResponse = incorrectText
-															.getText();
-											blockList.get(blockList.indexOf(
-													(blockMap.get(nameSectionField.getText())))).letter = brailleText
+													.get(nameSectionField.getText())))).letter = brailleText
 															.getText().charAt(0);
 											blockList.get(blockList.indexOf(
 													(blockMap.get(nameSectionField.getText())))).answer = Integer
@@ -655,16 +761,113 @@ public class ScenarioCreator extends Application {
 
 											// save text to block
 
-											int buttonsUsed = 4;
-											if (blockName.equals("") || storyText.equals("")
-													|| Integer.parseInt(answerText.getText()) > buttonsUsed) {
-												try {
-													throw new InvalidBlockException();
-												} catch (InvalidBlockException e2) {
-													// TODO Auto-generated catch block
-													e2.printStackTrace();
-												}
+											Block blockText;
+											try {
+												blockText = new Block(blockName, storyText.getText(),
+														correctText.getText(), incorrectText.getText(),
+														Integer.parseInt(answerText.getText()),
+														brailleText.getText().charAt(0));
+												blockList.add(blockText);
+												blockMap.put(blockName, blockText);
+											} catch (NumberFormatException e2) {
+												// TODO Auto-generated catch block
+												e2.printStackTrace();
+											} catch (InvalidBlockException e2) {
+												// TODO Auto-generated catch block
+												e2.printStackTrace();
+											}
+
+										}
+
+										// send blocklist to printer
+										try {
+											printer = new Printer(blockName + ".txt");
+											try {
+												printer.addBlockList(blockList);
+											} catch (InvalidCellException e2) {
+												e2.printStackTrace();
+											}
+											printer.print();
+										} catch (IOException e1) {
+											e1.printStackTrace();
+										} catch (OddSpecialCharacterException e3) {
+											// TODO Auto-generated catch block
+											e3.printStackTrace();
+										}
+
+									}
+								} else {
+									emptyStoryWindow.show();
+								}
+							else {
+								brailleWindow.show();
+							}
+						} else {
+							brailleWindow.show();
+						}
+
+					} else {
+						notANumberWindow.show();
+					}
+
+				} catch (NumberFormatException e2) {
+					notANumberWindow.show();
+				}
+
+			}
+		});
+		
+		
+		
+		saveButton.setOnKeyPressed(e -> {
+
+			if (e.getCode() == KeyCode.CONTROL) {
+				saveButton.setOnKeyPressed(e1 -> {
+					if (e1.getCode() == KeyCode.TAB) {
+						comboBox.requestFocus();
+					}
+				});
+			} else {
+				if (e.getCode() == KeyCode.ENTER) {
+
+					try {
+						int x = Integer.parseInt(answerText.getText());
+						if (x >= 1 && x <= 4) {
+							if (brailleText.getText().length() == 1) {
+								if (brailleText.getText().matches("[A-z]"))
+									if (storyText.getText().length() != 0) {
+										if (nameSectionField.getText().length() == 0) {
+											emptyNameWindow.show();
+										} else {
+
+											saveWindow.show();
+											// get name of file from user input
+											String blockName = nameSectionField.getText();
+
+											if (blockMap.containsKey(blockName)) {
+												blockList.get(blockList.indexOf(
+														(blockMap.get(nameSectionField.getText())))).story = storyText
+																.getText();
+												blockList.get(blockList.indexOf((blockMap.get(
+														nameSectionField.getText())))).correctResponse = correctText
+																.getText();
+												blockList.get(blockList.indexOf((blockMap.get(
+														nameSectionField.getText())))).wrongResponse = incorrectText
+																.getText();
+												blockList.get(blockList.indexOf((blockMap
+														.get(nameSectionField.getText())))).letter = brailleText
+																.getText().charAt(0);
+												blockList.get(blockList.indexOf(
+														(blockMap.get(nameSectionField.getText())))).answer = Integer
+																.parseInt(answerText.getText());
 											} else {
+
+												// save name to comboBox
+												comboBoxList.add(blockName);
+												comboBox.setItems(comboBoxList);
+
+												// save text to block
+
 												Block blockText;
 												try {
 													blockText = new Block(blockName, storyText.getText(),
@@ -694,25 +897,29 @@ public class ScenarioCreator extends Application {
 												printer.print();
 											} catch (IOException e1) {
 												e1.printStackTrace();
+											} catch (OddSpecialCharacterException e3) {
+												// TODO Auto-generated catch block
+												e3.printStackTrace();
 											}
+
 										}
+									} else {
+										emptyStoryWindow.show();
 									}
-								} else {
-									emptyStoryWindow.show();
+								else {
+									brailleWindow.show();
 								}
-							else {
+							} else {
 								brailleWindow.show();
 							}
+
 						} else {
-							brailleWindow.show();
+							notANumberWindow.show();
 						}
 
-					} else {
+					} catch (NumberFormatException e2) {
 						notANumberWindow.show();
 					}
-
-				} catch (NumberFormatException e2) {
-					notANumberWindow.show();
 				}
 			}
 		});
@@ -742,7 +949,7 @@ public class ScenarioCreator extends Application {
 				for (int j = 0; j < blockList.size(); j++) {
 					if (comboBox.getValue() == blockList.get(j).name) {
 						nameSectionField.setText((blockList.get(j).name));
-						storyText.setText(blockList.get(j).premise);
+						storyText.setText(blockList.get(j).story);
 						correctText.setText(blockList.get(j).correctResponse);
 						incorrectText.setText(blockList.get(j).wrongResponse);
 						brailleText.setText(Character.toString(blockList.get(j).letter));
@@ -754,15 +961,15 @@ public class ScenarioCreator extends Application {
 
 		});
 
-		
 		// File Menu Selection : new project
 		newProject.setOnAction(e -> {
-			
 			warningWindow.show();
-			
-			});
-		
-		
+		});
+
+		// hot key new project
+		newProject.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
+
+		// warning window okay button pressed
 		warningOkay.setOnAction(e1 -> {
 			nameSectionField.clear();
 			storyText.clear();
@@ -775,6 +982,7 @@ public class ScenarioCreator extends Application {
 			comboBoxList.add(0, "New Section");
 			warningWindow.close();
 		});
+		
 		warningOkay.setOnKeyPressed(e -> {
 			nameSectionField.clear();
 			storyText.clear();
@@ -789,7 +997,7 @@ public class ScenarioCreator extends Application {
 				warningWindow.close();
 			}
 		});
-		
+
 		warningCancel.setOnAction(e1 -> {
 			warningWindow.close();
 		});
@@ -798,16 +1006,16 @@ public class ScenarioCreator extends Application {
 				warningWindow.close();
 			}
 
-	
-		});		
-		
-		// File menu selection : save project
-		saveProject.setOnAction(e -> {
-
-			nameWindow.show();
-
 		});
 
+		// File menu selection : save project
+		saveProject.setOnAction(e -> {
+			nameWindow.show();
+		});
+
+		// hot key save project
+		saveProject.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
+		
 		loadProject.setOnAction(e -> {
 
 		});
@@ -825,16 +1033,21 @@ public class ScenarioCreator extends Application {
 					printer = new Printer(blockListName + ".txt");
 					try {
 						printer.addBlockList(blockList);
+						saveWindow.show();
+						nameWindow.close();
 					} catch (InvalidCellException e2) {
 						e2.printStackTrace();
 					}
 					printer.print();
 				} catch (IOException e3) {
 					e3.printStackTrace();
+				} catch (OddSpecialCharacterException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
 				}
 
-				nameWindow.close();
 			}
+
 		});
 		nameSaveButton.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
@@ -850,25 +1063,28 @@ public class ScenarioCreator extends Application {
 						printer = new Printer(blockListName + ".txt");
 						try {
 							printer.addBlockList(blockList);
+							saveWindow.show();
+							nameWindow.close();
 						} catch (InvalidCellException e3) {
 							e3.printStackTrace();
 						}
 						printer.print();
 					} catch (IOException e3) {
 						e3.printStackTrace();
+					} catch (OddSpecialCharacterException e4) {
+						// TODO Auto-generated catch block
+						e4.printStackTrace();
 					}
 
-					nameWindow.close();
 				}
 			}
 		});
-		
-		
+
 		// starting window -> choose audio or visual player
 		testButton.setOnAction(e1 -> {
 			primaryStage.close();
 			playerSelectionWindow.show();
-			
+
 			visualButton.setOnAction(e2 -> {
 				playerSelectionWindow.close();
 				FileChooser fileChooser = new FileChooser();
@@ -911,7 +1127,6 @@ public class ScenarioCreator extends Application {
 						ScenarioParser s = new ScenarioParser(false);
 						s.setScenarioFile(file.getAbsolutePath());
 					}
-
 				});
 			}
 		});

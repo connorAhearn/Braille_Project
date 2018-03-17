@@ -947,7 +947,6 @@ public class ScenarioCreator extends Application {
 
 			// send blocklist to printer == save txt file
 			try {
-
 				printer = new Printer(blockListName + ".txt", Integer.parseInt(brailleCellsField.getText()),
 						Integer.parseInt(answerButtonsField.getText()));
 				printer.addBlockList(blockList);

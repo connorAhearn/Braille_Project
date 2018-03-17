@@ -36,9 +36,9 @@ public class Block {
 	 * @param letter - Character to show up on the braille cell
 	 * @throws InvalidBlockException 
 	 */
-	public Block(String name, String story, String correct, String wrong, int answer, char letter) throws InvalidBlockException {
-		this(name, story, correct, wrong, answer, letter, 2);
-	}
+	//public Block(String name, String story, String correct, String wrong, int answer, char letter) throws InvalidBlockException {
+	//	this(name, story, correct, wrong, answer, letter, 2);
+	//}
 	
 	/**
 	 * String constructor - Old constructor modified to take strings instead of single characters.
@@ -50,7 +50,7 @@ public class Block {
 	 * @param answer - Number for correct button
 	 * @param cells - String to come up on the braille cells
 	 * @param buttonsUsed - How many buttons the section uses
-	 * @throws InvalidBlockException - Thrown when invalid paramaters are passed to the constructor
+	 * @throws InvalidBlockException - Thrown when invalid parameters are passed to the constructor
 	 */
 	public Block(String name, String story, String correct, String wrong, int answer, String cells, int buttonsUsed) throws InvalidBlockException {
 		
@@ -58,6 +58,9 @@ public class Block {
 		if(story.equals("")) throw new InvalidBlockException("Story field is empty");
 		if(answer > buttonsUsed) throw new InvalidBlockException("Answer button is outside the range of available buttons");
 		if(answer < 0) throw new InvalidBlockException("Answer button can't have a negative number");
+		if(cells.equals("")) throw new InvalidBlockException("Answer button can't have a negative number");
+		if(buttonsUsed < 0) throw new InvalidBlockException("Number of buttons used can't be a negative number");
+
 		
 		this.name = name;
 		this.story = story;

@@ -652,7 +652,6 @@ public class ScenarioCreator extends Application {
 		 * 
 		 * 
 		 * 
-		 * 
 		 */
 
 		Stage emptyStoryWindow = new Stage();
@@ -683,6 +682,46 @@ public class ScenarioCreator extends Application {
 		emptyStoryOkay.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				emptyStoryWindow.close();
+			}
+		});
+
+		/*
+		 * warning window : scenario can not be saved without one completed section
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
+
+		Stage noSectionsSavedWindow = new Stage();
+		GridPane layout14 = new GridPane();
+		layout14.setHgap(10);
+		layout14.setVgap(10);
+		layout14.setPadding(new Insets(5, 5, 5, 5));
+
+		Scene scene14 = new Scene(layout14);
+		noSectionsSavedWindow.setScene(scene14);
+		noSectionsSavedWindow.setTitle("Error");
+		Text noSectionsSaved = new Text(
+				"Scenario can only be saved after you have created and saved at least one section");
+		noSectionsSaved.setFill(Color.WHITE);
+		layout14.add(noSectionsSaved, 0, 0, 2, 1);
+		Button noSectionSavedOkay = new Button("Okay");
+		noSectionSavedOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
+		noSectionSavedOkay.setAccessibleRoleDescription("Okay button");
+		noSectionSavedOkay.setAccessibleText(
+				"Scenario can only be saved after you have created and saved at least one section, press enter to go back to main window");
+		layout14.add(noSectionSavedOkay, 2, 1);
+		layout14.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		// action event
+		noSectionSavedOkay.setOnAction(e -> {
+			noSectionsSavedWindow.close();
+		});
+		noSectionSavedOkay.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				noSectionsSavedWindow.close();
 			}
 		});
 
@@ -723,8 +762,7 @@ public class ScenarioCreator extends Application {
 				saveWindow.close();
 			}
 		});
-		
-		
+
 		Stage scenarioSavedWindow = new Stage();
 		GridPane layout13 = new GridPane();
 		layout13.setHgap(10);
@@ -781,12 +819,12 @@ public class ScenarioCreator extends Application {
 		warningOkay.setAccessibleRoleDescription("Okay button");
 		warningOkay.setAccessibleText(
 				"Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
-		layout10.add(warningOkay, 0, 4);
+		layout10.add(warningOkay, 2, 4);
 		Button warningCancel = new Button("Cancel");
 		warningCancel.setStyle("-fx-base: #87ceeb;"); // sky blue
 		warningCancel.setAccessibleRoleDescription("Cancel button");
 		warningCancel.setAccessibleText("Press enter to return to main window");
-		layout10.add(warningCancel, 2, 4);
+		layout10.add(warningCancel, 0, 4);
 		layout10.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -920,14 +958,23 @@ public class ScenarioCreator extends Application {
 				new KeyCodeCombination(KeyCode.N, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
 		// warning window okay button pressed
-		warningOkay.setOnAction(e1 -> {
-			resetGui(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
-					incorrectText, comboBoxList, comboBox, warningWindow);
+		warningOkay.setOnAction(e -> {
+			scenarioCreator.close();
+			warningWindow.close();
+			brailleCellsUsedWindow.show();
+			scenarioNameField.clear();
+			brailleCellsField.clear();
+			answerButtonsField.clear();
+
 		});
 
 		warningOkay.setOnKeyPressed(e -> {
-			resetGui(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
-					incorrectText, comboBoxList, comboBox, warningWindow);
+			scenarioCreator.close();
+			warningWindow.close();
+			brailleCellsUsedWindow.show();
+			scenarioNameField.clear();
+			brailleCellsField.clear();
+			answerButtonsField.clear();
 		});
 
 		warningCancel.setOnAction(e1 -> {
@@ -943,35 +990,24 @@ public class ScenarioCreator extends Application {
 		// File menu selection : save project
 		saveProject.setOnAction(e -> {
 
-			String blockListName = scenarioNameField.getText();
+			if (blockList.size() == 0) {
+				noSectionsSavedWindow.show();
+			} else {
+				// send blocklist to printer == save txt file
+				try {
+					printer = new Printer(scenarioNameField.getText() + ".txt",
+							Integer.parseInt(brailleCellsField.getText()),
+							Integer.parseInt(answerButtonsField.getText()));
+					printer.addBlockList(blockList);
+					scenarioSavedWindow.show();
+					printer.print();
+				} catch (IOException e3) {
+					e3.printStackTrace();
+				} catch (OddSpecialCharacterException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+				} catch (InvalidBlockException e3) {
 
-			// send blocklist to printer == save txt file
-			try {
-				printer = new Printer(blockListName + ".txt", Integer.parseInt(brailleCellsField.getText()),
-						Integer.parseInt(answerButtonsField.getText()));
-				printer.addBlockList(blockList);
-				scenarioSavedWindow.show();
-				printer.print();
-			} catch (IOException e3) {
-				e3.printStackTrace();
-			} catch (OddSpecialCharacterException e3) {
-				// TODO Auto-generated catch block
-				e3.printStackTrace();
-			} catch (InvalidBlockException e3) {
-				if (nameSectionField.getText().equals("")) {
-					emptyNameWindow.show();
-				} else if (brailleText.getText().length() == 0
-						|| brailleText.getText().length() > Integer.parseInt(brailleCellsField.getText())
-						|| !brailleText.getText().matches("[A-z]+")) {
-					brailleWindow.show();
-				} else if (Integer.parseInt(answerText.getText()) < 1
-						|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsUsedField.getText())
-						|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText())
-						|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer
-								.parseInt(answerButtonsField.getText())) {
-					buttonsUsedWindow.show();
-				} else if (storyText.getText().length() == 0) {
-					emptyStoryWindow.show();
 				}
 			}
 		});
@@ -982,8 +1018,7 @@ public class ScenarioCreator extends Application {
 
 		loadProject.setOnAction(e -> {
 
-		});		
-
+		});
 
 		// starting window -> choose audio or visual player
 		testButton.setOnAction(e1 -> {
@@ -1096,28 +1131,6 @@ public class ScenarioCreator extends Application {
 	}
 
 	/*
-	 * rests the GUI to blank
-	 * 
-	 * 
-	 * 
-	 */
-	private void resetGui(TextField nameSectionField, TextField answerButtonsUsedField, TextArea storyText,
-			TextField brailleText, TextField answerText, TextArea correctText, TextArea incorrectText,
-			ObservableList<String> comboBoxList, ComboBox<String> comboBox, Stage warningWindow) {
-		nameSectionField.clear();
-		storyText.clear();
-		correctText.clear();
-		incorrectText.clear();
-		brailleText.clear();
-		answerText.clear();
-		answerButtonsUsedField.clear();
-		comboBox.getItems().removeAll(comboBoxList);
-		comboBox.setPromptText("Select a section");
-		comboBoxList.add(0, "New Section");
-		warningWindow.close();
-	}
-
-	/*
 	 * creating / naming new scenario
 	 * 
 	 * 
@@ -1125,11 +1138,9 @@ public class ScenarioCreator extends Application {
 	private void nameNewScenario(Stage scenarioCreator, Stage errorWindow, Stage brailleCellsUsedWindow,
 			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
 		try {
-			Printer printer = new Printer(scenarioNameField.getText() + "txt",
-					Integer.parseInt(brailleCellsField.getText()), Integer.parseInt(answerButtonsField.getText()));
 			scenarioCreator.show();
 			brailleCellsUsedWindow.close();
-		} catch (NumberFormatException | IOException | OddSpecialCharacterException | InvalidBlockException e3) {
+		} catch (NumberFormatException e3) {
 			errorWindow.show();
 			e3.printStackTrace();
 		}

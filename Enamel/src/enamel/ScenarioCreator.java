@@ -102,10 +102,10 @@ public class ScenarioCreator extends Application {
 		
 		Menu scenarioMenu = new Menu("Scenario");
 
-		MenuItem newProject = new MenuItem("New Project");
-		MenuItem loadProject = new MenuItem("Load Project");
-		MenuItem saveProject = new MenuItem("Save Project");
-		MenuItem testProject = new MenuItem("Test Project");
+		MenuItem newProject = new MenuItem("New Scenario");
+		MenuItem loadProject = new MenuItem("Load Scenario");
+		MenuItem saveProject = new MenuItem("Save Scenario");
+		MenuItem testProject = new MenuItem("Test Scenario");
 
 
 		scenarioMenu.getItems().add(newProject);
@@ -979,181 +979,24 @@ public class ScenarioCreator extends Application {
 
 		});
 
-									saveWindow.show();
-									// get name of file from user input
-									String blockName = nameSectionField.getText();
-
-									if (blockMap.containsKey(blockName)) {
-										blockList.get(blockList.indexOf(
-												(blockMap.get(nameSectionField.getText())))).story = storyText
-														.getText();
-										blockList.get(blockList.indexOf((blockMap
-												.get(nameSectionField.getText())))).correctResponse = correctText
-														.getText();
-										blockList.get(blockList.indexOf((blockMap
-												.get(nameSectionField.getText())))).wrongResponse = incorrectText
-														.getText();
-										blockList.get(blockList.indexOf(
-												(blockMap.get(nameSectionField.getText())))).letter = brailleText
-														.getText().charAt(0);
-										blockList.get(blockList
-												.indexOf((blockMap.get(nameSectionField.getText())))).answer = Integer
-														.parseInt(answerText.getText());
-									} else {
-
-										// save name to comboBox
-										comboBoxList.add(blockName);
-										comboBox.setItems(comboBoxList);
-
-										// save text to block
-
-										int buttonsUsed = 4;
-										if (blockName.equals("") || storyText.equals("")
-												|| Integer.parseInt(answerText.getText()) > buttonsUsed) {
-											try {
-												throw new InvalidBlockException();
-											} catch (InvalidBlockException e2) {
-												// TODO Auto-generated catch block
-												e2.printStackTrace();
-											}
-										} else {
-											Block blockText;
-											try {
-												blockText = new Block(blockName, storyText.getText(),
-														correctText.getText(), incorrectText.getText(),
-														Integer.parseInt(answerText.getText()),
-														brailleText.getText().charAt(0));
-												blockList.add(blockText);
-												blockMap.put(blockName, blockText);
-											} catch (NumberFormatException e2) {
-												// TODO Auto-generated catch block
-												e2.printStackTrace();
-											} catch (InvalidBlockException e2) {
-												// TODO Auto-generated catch block
-												e2.printStackTrace();
-											}
-
-										}
-
-									}
-								}
-							} else {
-								emptyStoryWindow.show();
-							}
-						} else {
-							brailleWindow.show();
-						}
-					} else {
-						brailleWindow.show();
+		// hot key save section button
+		saveButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText,
+								correctText, incorrectText, comboBoxList, comboBox, brailleCellsField,
+								answerButtonsField, notANumberWindow, brailleWindow, emptyNameWindow, buttonsUsedWindow,
+								emptyStoryWindow, saveWindow);
 					}
 				});
 
 		saveButton.setOnKeyPressed(e -> {
 
-			if (e.getCode() == KeyCode.ENTER) {
-
-				try {
-					int x = Integer.parseInt(answerText.getText());
-					if (x >= 1 && x <= 4) {
-						if (brailleText.getText().length() == 1) {
-							if (brailleText.getText().matches("[A-z]"))
-								if (storyText.getText().length() != 0) {
-									if (nameSectionField.getText().length() == 0) {
-										emptyNameWindow.show();
-									} else {
-
-										saveWindow.show();
-										// get name of file from user input
-										String blockName = nameSectionField.getText();
-
-										if (blockMap.containsKey(blockName)) {
-											blockList.get(blockList.indexOf(
-													(blockMap.get(nameSectionField.getText())))).story = storyText
-															.getText();
-											blockList.get(blockList.indexOf((blockMap
-													.get(nameSectionField.getText())))).correctResponse = correctText
-															.getText();
-											blockList.get(blockList.indexOf((blockMap
-													.get(nameSectionField.getText())))).wrongResponse = incorrectText
-															.getText();
-											blockList.get(blockList.indexOf(
-													(blockMap.get(nameSectionField.getText())))).letter = brailleText
-															.getText().charAt(0);
-											blockList.get(blockList.indexOf(
-													(blockMap.get(nameSectionField.getText())))).answer = Integer
-															.parseInt(answerText.getText());
-										} else {
-
-											// save name to comboBox
-											comboBoxList.add(blockName);
-											comboBox.setItems(comboBoxList);
-
-											// save text to block
-
-											int buttonsUsed = 4;
-											if (blockName.equals("") || storyText.equals("")
-													|| Integer.parseInt(answerText.getText()) > buttonsUsed) {
-												try {
-													throw new InvalidBlockException();
-												} catch (InvalidBlockException e2) {
-													// TODO Auto-generated catch block
-													e2.printStackTrace();
-												}
-											} else {
-												Block blockText;
-												try {
-													blockText = new Block(blockName, storyText.getText(),
-															correctText.getText(), incorrectText.getText(),
-															Integer.parseInt(answerText.getText()),
-															brailleText.getText().charAt(0));
-													blockList.add(blockText);
-													blockMap.put(blockName, blockText);
-												} catch (NumberFormatException e2) {
-													// TODO Auto-generated catch block
-													e2.printStackTrace();
-												} catch (InvalidBlockException e2) {
-													// TODO Auto-generated catch block
-													e2.printStackTrace();
-												}
-
-											}
-
-											// send blocklist to printer
-											try {
-												printer = new Printer(blockName + ".txt");
-												try {
-													printer.addBlockList(blockList);
-												} catch (OddSpecialCharacterException e3) {
-													// TODO Auto-generated catch block
-													e3.printStackTrace();
-												} catch (InvalidBlockException e3) {
-													// TODO Auto-generated catch block
-													e3.printStackTrace();
-												}
-												printer.print();
-											} catch (IOException e1) {
-												e1.printStackTrace();
-											} catch (OddSpecialCharacterException e4) {
-												// TODO Auto-generated catch block
-												e4.printStackTrace();
-											} catch (InvalidBlockException e4) {
-												// TODO Auto-generated catch block
-												e4.printStackTrace();
-											}
-										}
-									}
-								} else {
-									emptyStoryWindow.show();
-								}
-							else {
-								brailleWindow.show();
-							}
-						} else {
-							brailleWindow.show();
-						}
-
-					} else {
-						notANumberWindow.show();
+			if (e.getCode() == KeyCode.CONTROL) {
+				saveButton.setOnKeyPressed(e1 -> {
+					if (e1.getCode() == KeyCode.TAB) {
+						comboBox.requestFocus();
 					}
 				});
 			} else {
@@ -1238,7 +1081,7 @@ public class ScenarioCreator extends Application {
 
 		});
 
-// File menu selection : save project
+		// File menu selection : save project
 		saveProject.setOnAction(e -> {
 
 			if (blockList.size() == 0) {
@@ -1278,19 +1121,6 @@ public class ScenarioCreator extends Application {
 
 		testButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				runTest(primaryStage, playerSelectionWindow, visualButton, audioButton);
-			}
-		});
-
-		// Set true to help see how nodes are aligned
-		layout.setGridLinesVisible(false);
-	}			if (blockList.size() == 0) {
-				noSectionsSavedWindow.show();
-		// hot key save project
-		saveProject.setAccelerator(
-				new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
-		loadProject.setOnAction(e -> {
-			runTest(primaryStage, playerSelectionWindow, visualButton, audioButton);
 				runTest(primaryStage, playerSelectionWindow, visualButton, audioButton);
 			}
 		});

@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 //coping code from V-player -micah
 
 import java.awt.BorderLayout;

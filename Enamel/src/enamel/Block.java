@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 public class Block {
 	

@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 import java.io.File;
 import java.io.IOException;
@@ -538,12 +538,14 @@ public class ScenarioParser {
 			else
 			    player =  new AudioPlayer(cellNum, buttonNum);
 		} catch (Exception e) {
-
-			errorLog("Exception error: " + e.toString(),
-					"Expected format: Cell num1 \n Button num2 \n "
+			VisualPlayer vPlayer = new VisualPlayer(1, 1);
+			String error1 = "Exception error: " + e.toString();
+			String error2 = 		"Expected format: Cell num1 \n Button num2 \n "
 							+ "as the first two lines of the scenarion file, and where num1 and num2 are positive integers. \n"
 							+ "Did not receive such a format in the scenario file and program had to end due to the incorrect"
-							+ "file format.");
+							+ "file format.";
+			vPlayer.setLabel(error2);
+			errorLog(error1, error2);
 		}
 	}
 

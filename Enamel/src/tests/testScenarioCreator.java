@@ -1,8 +1,8 @@
-package tests;
+package src.tests;
 
 import org.junit.*;
 
-import enamel.ScenarioCreator;
+import src.enamel.ScenarioCreator;
 
 import static org.junit.Assert.*;
 

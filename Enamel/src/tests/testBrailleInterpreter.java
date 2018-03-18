@@ -1,8 +1,8 @@
-package tests;
+package src.tests;
 
 import org.junit.*;
-import enamel.BrailleInterpreter;
-import enamel.InvalidCellException;
+import src.enamel.BrailleInterpreter;
+import src.enamel.InvalidCellException;
 
 import static org.junit.Assert.*;
 

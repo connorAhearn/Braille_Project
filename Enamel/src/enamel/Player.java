@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -166,6 +166,11 @@ public abstract class Player {
 	public abstract void addRepeatButtonListener(int index, ScenarioParser sp);
 
 	public void setup() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setLabel(String error2) {
 		// TODO Auto-generated method stub
 		
 	}	

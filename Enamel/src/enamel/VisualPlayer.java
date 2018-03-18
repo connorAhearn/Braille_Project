@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
@@ -55,6 +56,7 @@ public class VisualPlayer extends Player {
 	JRadioButton[] pins = new JRadioButton[8];
 	int[] pinIndex = {0, 2, 4, 1, 3, 5, 6, 7};
 	private boolean displayed = false;
+	public JLabel label = new JLabel();
 
 	
 	/**
@@ -103,6 +105,7 @@ public class VisualPlayer extends Player {
 					panel.setSize(50, 50);
 					panel.setBorder(BorderFactory.createLineBorder(Color.black));
 					centerPanel.add(panel);
+					centerPanel.add(label);
 
 					if (i == (brailleCellNumber - 1))
 						frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
@@ -114,7 +117,7 @@ public class VisualPlayer extends Player {
 					buttonList.add(button);
 					southPanel.add(button);
 				}
-
+				
 				frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
 
 				// deleted conner's test button - micah
@@ -128,7 +131,9 @@ public class VisualPlayer extends Player {
 }
 	
 	
-	
+	public void setLabel(String str) {
+		label.setText(str);
+	}
 	
 
 	

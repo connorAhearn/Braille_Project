@@ -1,4 +1,4 @@
-package tests;
+package src.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -13,12 +13,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import enamel.Block;
-import enamel.BrailleInterpreter;
-import enamel.InvalidBlockException;
-import enamel.InvalidCellException;
-import enamel.OddSpecialCharacterException;
-import enamel.Printer;
+import src.enamel.Block;
+import src.enamel.InvalidBlockException;
+import src.enamel.InvalidCellException;
+import src.enamel.OddSpecialCharacterException;
+import src.enamel.BrailleInterpreter;
+import src.enamel.Printer;
 
 public class testPrinter {
 	
@@ -102,6 +102,9 @@ public class testPrinter {
 			printer = new Printer("test.txt", 1, 4);
 		} catch (IOException e1) {
 			fail("Constructor threw IOException");
+		} catch (InvalidBlockException e) {
+			fail("Constructor threw InvalidBlockException");
+			e.printStackTrace();
 		}
 		
 		try {

@@ -55,7 +55,7 @@ public class ScenarioCreator extends Application {
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
 		layout1.setVgap(10);
-		layout1.setPadding(new Insets(5, 5, 5, 5));
+		layout1.setPadding(new Insets(5, 5, 10, 5));
 		Scene scene1 = new Scene(layout1, 550, 200);
 
 		Text startWindowText = new Text("                       Welcome to Scenario Creator");
@@ -89,21 +89,99 @@ public class ScenarioCreator extends Application {
 		layout.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		// File menu
-		Menu fileMenu = new Menu("File");
+		
+		/*_________ Scenario menu
+		 * 
+		 * 
+		 * create new scenario
+		 * load scenario
+		 * save scenario
+		 * 
+		 * 
+		 */
+		
+		Menu scenarioMenu = new Menu("Scenario");
 
-		// Menu Items
 		MenuItem newProject = new MenuItem("New Project");
 		MenuItem loadProject = new MenuItem("Load Project");
 		MenuItem saveProject = new MenuItem("Save Project");
+		MenuItem testProject = new MenuItem("Test Project");
 
-		fileMenu.getItems().add(newProject);
-		fileMenu.getItems().add(loadProject);
-		fileMenu.getItems().add(saveProject);
 
-		// Main menu bar
+		scenarioMenu.getItems().add(newProject);
+		scenarioMenu.getItems().add(loadProject);
+		scenarioMenu.getItems().add(saveProject);
+		scenarioMenu.getItems().add(testProject);
+
+		
+		/* Section menu
+		 * 
+		 * 
+		 * save section
+		 * clear section
+		 * 
+		 * 
+		 */
+		Menu sectionMenu = new Menu("Section");
+
+		MenuItem saveSection = new MenuItem("Save Section");
+		MenuItem clearSection = new MenuItem("Clear Section");
+
+		sectionMenu.getItems().add(saveSection);
+		sectionMenu.getItems().add(clearSection);
+		
+		/* Go to 
+		 * 
+		 * 
+		 * Goes to text field or area
+		 * 
+		 * 
+		 */
+		Menu goToMenu = new Menu("Go To");
+
+		MenuItem goToSectionName = new MenuItem("Section Name");
+		MenuItem goToAnswerButtonsUsed = new MenuItem("Answer Buttons Used");
+		MenuItem goToStory = new MenuItem("Story");
+		MenuItem goToBraille = new MenuItem("Braille");
+		MenuItem goToAnswer = new MenuItem("Answer");
+		MenuItem goToCorrect = new MenuItem("Correct");
+		MenuItem goToIncorrect = new MenuItem("Incorrect");
+		MenuItem goToComboBox = new MenuItem("Drop Down");
+
+		goToMenu.getItems().add(goToSectionName);
+		goToMenu.getItems().add(goToAnswerButtonsUsed);
+		goToMenu.getItems().add(goToStory);
+		goToMenu.getItems().add(goToBraille);
+		goToMenu.getItems().add(goToAnswer);
+		goToMenu.getItems().add(goToCorrect);
+		goToMenu.getItems().add(goToIncorrect);
+		goToMenu.getItems().add(goToComboBox);
+		
+		
+		/* Sound menu
+		 * 
+		 * 
+		 * add sound
+		 * 
+		 * 
+		 */
+		Menu soundMenu = new Menu("Sound");
+
+		MenuItem addSound = new MenuItem("Add Sound");
+
+		soundMenu.getItems().add(addSound);
+
+		/* menu bar
+		 * 
+		 * Scenario
+		 * Section
+		 * Go to
+		 * 
+		 * 
+		 */
+		
 		MenuBar menuBar = new MenuBar();
-		menuBar.getMenus().addAll(fileMenu);
+		menuBar.getMenus().addAll(scenarioMenu, sectionMenu, goToMenu, soundMenu);
 		menuBar.setOpacity(0.7);
 		layout.add(menuBar, 0, 0, 8, 1);
 
@@ -156,7 +234,7 @@ public class ScenarioCreator extends Application {
 
 		TextArea storyText = new TextArea();
 		storyText.setPrefHeight(250);
-		storyText.setPrefWidth(600);
+		storyText.setPrefWidth(500);
 		storyText.setOpacity(0.9);
 		storyText.setWrapText(true);
 		storyText.setEffect(borderGlow);
@@ -201,12 +279,20 @@ public class ScenarioCreator extends Application {
 		layout.add(answerLabel, 3, 7);
 
 		// sound button
-		Button sound = new Button("Sound");
+		Button sound = new Button("  Add Sound   ");
 		sound.setAccessibleRoleDescription("Sound button");
 		sound.setAccessibleText("Sound option is currently not available in this version");
 		sound.setStyle("-fx-base: #87ceeb;"); // sky blue
 		layout.add(sound, 7, 7);
 
+		
+		// Clear Section button
+		Button clearSectionButton = new Button("Clear Section");
+		clearSectionButton.setAccessibleRoleDescription("Clear button");
+		clearSectionButton.setAccessibleText("Press enter to clear all fields");
+		clearSectionButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		layout.add(clearSectionButton, 7, 19);
+		
 		// Correct text area
 		Text correct = new Text(" Correct");
 		correct.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -215,7 +301,7 @@ public class ScenarioCreator extends Application {
 
 		TextArea correctText = new TextArea();
 		correctText.setPrefHeight(100);
-		correctText.setPrefWidth(600);
+		correctText.setPrefWidth(500);
 		correctText.setOpacity(0.95);
 		correctText.setWrapText(true);
 		correctText.setEffect(borderGlow);
@@ -235,7 +321,7 @@ public class ScenarioCreator extends Application {
 
 		TextArea incorrectText = new TextArea();
 		incorrectText.setPrefHeight(100);
-		incorrectText.setPrefWidth(600);
+		incorrectText.setPrefWidth(500);
 		incorrectText.setOpacity(0.95);
 		incorrectText.setWrapText(true);
 		incorrectText.setEffect(borderGlow);
@@ -248,7 +334,7 @@ public class ScenarioCreator extends Application {
 		layout.add(incorrectLabel, 0, 8, 8, 4);
 
 		// blank text field for spacing
-		Text blank1 = new Text("                                                                ");
+		Text blank1 = new Text("                                         ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 7);
 
@@ -267,6 +353,13 @@ public class ScenarioCreator extends Application {
 		comboBox.setPromptText("Select a section");
 		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
+		
+		// save section button
+		Button testScenario = new Button("Test Scenario");
+		testScenario.setAccessibleRoleDescription("Test Scenario");
+		testScenario.setAccessibleText("Press enter to test current scenario");
+		testScenario.setStyle("-fx-base: #FFFFFF;"); // sky blue
+		layout.add(testScenario, 7, 1);
 
 		/*
 		 * 
@@ -355,6 +448,7 @@ public class ScenarioCreator extends Application {
 		TextField brailleCellsField = new TextField();
 		Text brailleCellsText = new Text("Braille Cells Available");
 		TextField answerButtonsField = new TextField();
+
 		Text answerButtonsText = new Text("Answer Buttons Available");
 		layout11.add(scenarioNameField, 0, 1);
 		layout11.add(scenarioNameText, 1, 1);
@@ -968,7 +1062,7 @@ public class ScenarioCreator extends Application {
 
 		});
 
-		warningOkay.setOnKeyPressed(e -> {
+		warningOkay.setOnKeyPressed(e1 -> {
 			scenarioCreator.close();
 			warningWindow.close();
 			brailleCellsUsedWindow.show();
@@ -977,11 +1071,11 @@ public class ScenarioCreator extends Application {
 			answerButtonsField.clear();
 		});
 
-		warningCancel.setOnAction(e1 -> {
+		warningCancel.setOnAction(e2 -> {
 			warningWindow.close();
 		});
-		warningCancel.setOnKeyPressed(e2 -> {
-			if (e2.getCode() == KeyCode.ENTER) {
+		warningCancel.setOnKeyPressed(e3 -> {
+			if (e3.getCode() == KeyCode.ENTER) {
 				warningWindow.close();
 			}
 

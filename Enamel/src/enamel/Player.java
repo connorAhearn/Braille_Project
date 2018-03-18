@@ -168,5 +168,10 @@ public abstract class Player {
 	public void setup() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void setLabel(String error2) {
+		// TODO Auto-generated method stub
+		
 	}	
 }

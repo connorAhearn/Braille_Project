@@ -541,7 +541,7 @@ public class ScenarioCreator extends Application {
 
 									if (blockMap.containsKey(blockName)) {
 										blockList.get(blockList.indexOf(
-												(blockMap.get(nameSectionField.getText())))).premise = storyText
+												(blockMap.get(nameSectionField.getText())))).story = storyText
 														.getText();
 										blockList.get(blockList.indexOf((blockMap
 												.get(nameSectionField.getText())))).correctResponse = correctText
@@ -633,7 +633,7 @@ public class ScenarioCreator extends Application {
 
 										if (blockMap.containsKey(blockName)) {
 											blockList.get(blockList.indexOf(
-													(blockMap.get(nameSectionField.getText())))).premise = storyText
+													(blockMap.get(nameSectionField.getText())))).story = storyText
 															.getText();
 											blockList.get(blockList.indexOf((blockMap
 													.get(nameSectionField.getText())))).correctResponse = correctText
@@ -688,12 +688,22 @@ public class ScenarioCreator extends Application {
 												printer = new Printer(blockName + ".txt");
 												try {
 													printer.addBlockList(blockList);
-												} catch (InvalidCellException e2) {
-													e2.printStackTrace();
+												} catch (OddSpecialCharacterException e3) {
+													// TODO Auto-generated catch block
+													e3.printStackTrace();
+												} catch (InvalidBlockException e3) {
+													// TODO Auto-generated catch block
+													e3.printStackTrace();
 												}
 												printer.print();
 											} catch (IOException e1) {
 												e1.printStackTrace();
+											} catch (OddSpecialCharacterException e4) {
+												// TODO Auto-generated catch block
+												e4.printStackTrace();
+											} catch (InvalidBlockException e4) {
+												// TODO Auto-generated catch block
+												e4.printStackTrace();
 											}
 										}
 									}
@@ -742,7 +752,7 @@ public class ScenarioCreator extends Application {
 				for (int j = 0; j < blockList.size(); j++) {
 					if (comboBox.getValue() == blockList.get(j).name) {
 						nameSectionField.setText((blockList.get(j).name));
-						storyText.setText(blockList.get(j).premise);
+						storyText.setText(blockList.get(j).story);
 						correctText.setText(blockList.get(j).correctResponse);
 						incorrectText.setText(blockList.get(j).wrongResponse);
 						brailleText.setText(Character.toString(blockList.get(j).letter));
@@ -823,13 +833,15 @@ public class ScenarioCreator extends Application {
 				try {
 
 					printer = new Printer(blockListName + ".txt");
-					try {
-						printer.addBlockList(blockList);
-					} catch (InvalidCellException e2) {
-						e2.printStackTrace();
-					}
+					printer.addBlockList(blockList);
 					printer.print();
 				} catch (IOException e3) {
+					e3.printStackTrace();
+				} catch (OddSpecialCharacterException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+				} catch (InvalidBlockException e3) {
+					// TODO Auto-generated catch block
 					e3.printStackTrace();
 				}
 
@@ -850,12 +862,22 @@ public class ScenarioCreator extends Application {
 						printer = new Printer(blockListName + ".txt");
 						try {
 							printer.addBlockList(blockList);
-						} catch (InvalidCellException e3) {
+						} catch (OddSpecialCharacterException e3) {
+							// TODO Auto-generated catch block
+							e3.printStackTrace();
+						} catch (InvalidBlockException e3) {
+							// TODO Auto-generated catch block
 							e3.printStackTrace();
 						}
 						printer.print();
 					} catch (IOException e3) {
 						e3.printStackTrace();
+					} catch (OddSpecialCharacterException e4) {
+						// TODO Auto-generated catch block
+						e4.printStackTrace();
+					} catch (InvalidBlockException e4) {
+						// TODO Auto-generated catch block
+						e4.printStackTrace();
 					}
 
 					nameWindow.close();

@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 import java.util.HashMap;
 

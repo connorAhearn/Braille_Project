@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 import java.io.EOFException;
 import java.io.File;

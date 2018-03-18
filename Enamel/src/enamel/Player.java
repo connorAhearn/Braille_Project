@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

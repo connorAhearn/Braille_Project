@@ -1,4 +1,4 @@
-package enamel;
+package src.enamel;
 
 /**
  * Exception thrown when invalid input is given to the block constructor. 

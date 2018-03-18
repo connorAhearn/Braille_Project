@@ -210,9 +210,34 @@ public class ScenarioCreator extends Application {
 	private void createSectionMenu() {
 		sectionMenu = new Menu("Section");
 
+
 		saveSection = new MenuItem("Save Section");
 		clearSection = new MenuItem("Clear Section");
 
+		MenuItem newProject = new MenuItem("New Scenario");
+		MenuItem loadProject = new MenuItem("Load Scenario");
+		MenuItem saveProject = new MenuItem("Save Scenario");
+		MenuItem testProject = new MenuItem("Test Scenario");
+
+
+		scenarioMenu.getItems().add(newProject);
+		scenarioMenu.getItems().add(loadProject);
+		scenarioMenu.getItems().add(saveProject);
+		scenarioMenu.getItems().add(testProject);
+
+		
+		/* Section menu
+		 * 
+		 * 
+		 * save section
+		 * clear section
+		 * 
+		 * 
+		 */
+		Menu sectionMenu = new Menu("Section");
+
+		MenuItem saveSection = new MenuItem("Save Section");
+		MenuItem clearSection = new MenuItem("Clear Section");
 		sectionMenu.getItems().add(saveSection);
 		sectionMenu.getItems().add(clearSection);
 	}

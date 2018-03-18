@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -439,6 +438,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	private void borderGlowSetup() {
+		borderGlow = new DropShadow();
 		int depth = 40;
 		borderGlow.setColor(Color.LIGHTBLUE);
 		borderGlow.setWidth(depth);

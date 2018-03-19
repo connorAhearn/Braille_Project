@@ -13,6 +13,7 @@ public class Loader {
 	
 	Block holdOn;
 	ArrayList<Block> blocklist = new ArrayList<Block>();
+	ArrayList<String> buttonOrder = new ArrayList<String>();
 	String stringBasedBoolean = "story";
 	Boolean inText = false;
 	
@@ -55,24 +56,21 @@ public class Loader {
 					fileScanner.nextLine();
 				}
 				else {
-					throw new EOFException();
+					throw new EOFException(); // this may be over kill
 				}
-			}
-			
-				
+			}	
 		}
 		else {
-			throw new EOFException();
+			throw new EOFException(); // this may be over kill
 		}
 		
 		
-		
+		// loops the file scanners through every line of text
 		while (fileScanner.hasNextLine()) {
 			fileLine = fileScanner.nextLine();
 			if (nextLineCheck.hasNextLine()) {
 				lineAfter = nextLineCheck.nextLine();
-			}
-		
+			} // this may require EOF exception
 			interpretLine(fileLine, lineAfter);
 		}
 		
@@ -82,7 +80,8 @@ public class Loader {
 	
 	private void interpretLine(String line, String nextLine) {
 	
-		if(line.equals("\\n")){
+		if(line.equals("\\n")){ //This my not be correct to it's intended use
+			
 			// gonna need a copy constructor for block
 			// blocklist.add(new Block(holdOn));
 			stringBasedBoolean = "story";
@@ -95,15 +94,17 @@ public class Loader {
 		
 		else if(line.length() >= 14 && line.substring(0, 14).equals("/~Skip-button:")) {
 			String[] param;
+			param = line.substring(14).split("\\s"); // possible mistake
+			
+			buttonOrder.add(param[1]);
+			
 			if (nextLine.length() >= 14 ) {
 				// possible issues with this condition 
-				if(!(nextLine.substring(0, 14).equals("/~Skip-button:"))) {
-					param = line.substring(14).split("\\s");
+				if(!(nextLine.substring(0, 14).equals("/~Skip-button:"))) {	
 					setButtonsUsed(param[0]);
 				}
 			}
 			else {
-				param = line.substring(14).split("\\s");
 				setButtonsUsed(param[0]);
 			}
 			
@@ -111,11 +112,8 @@ public class Loader {
 		}
 		// this one may need to change
 	//	else if(line.length() >= 1 && (line.substring(0, 1).equals("*") || line.substring(0, 0).equals("^"))) {
-			
-			
-			
-			
 		//}
+		
 		else if (line.length() >= 14 && line.substring(0, 14).equals("/~disp-string:")) {
 			if(inText) {
 				String[] param = line.split("\\s");
@@ -129,7 +127,13 @@ public class Loader {
 		}
 		
 		else if(line.length() >= 8 && line.substring(0, 8).equals("/~button")) {
+			String[] param = line.substring(8).split("\\s"); // this may not be the appropriate format
 			
+			if (nextLine.length() >= 7 && nextLine.substring(0, 7).equals("/~sound")) {
+				if (nextLine.substring(7).equals(" correct.wav")) { // another instance of " correct.wav" maybe incorrect
+					setAnswer(buttonOrder.indexOf(param[1]));
+				}
+			}
 		}
 
 		else if(line.length() >= 7 && line.substring(0, 7).equals("/~sound")) {
@@ -180,8 +184,8 @@ public class Loader {
 		holdOn.wrongResponse += w;
 	}
 
-	private void setAnswer(String a) {
-		holdOn.answer = Integer.valueOf(a);
+	private void setAnswer(int a) {
+		holdOn.answer = a;
 	}
 
 	private void setCell(String c) {

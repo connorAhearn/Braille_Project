@@ -2,7 +2,11 @@ package src.tests;
 
 import org.junit.Test;
 
+<<<<<<< HEAD
 import FactoryScenarios.AudioFiles.ScenarioCreator;
+=======
+import src.enamel.*;
+>>>>>>> branch 'master' of https://github.com/connorAhearn/Braille_Project
 
 public class testScenarioCreator {
 

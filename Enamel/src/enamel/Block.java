@@ -54,7 +54,7 @@ public class Block {
 	 */
 	public Block(String name, String story, String correct, String wrong, int answer, String cells, int buttonsUsed) throws InvalidBlockException {
 		
-		if(name.equals("")) throw new InvalidBlockException("Section doesn't have a name");
+		if(name.equals("")) throw new InvalidBlockException("noname");
 		if(story.equals("")) throw new InvalidBlockException("Story field is empty");
 		if(answer > buttonsUsed) throw new InvalidBlockException("Answer button is outside the range of available buttons");
 		if(answer < 0) throw new InvalidBlockException("Answer button can't have a negative number");
@@ -67,4 +67,7 @@ public class Block {
 		this.cells = cells;
 		this.buttonsUsed = buttonsUsed;
 	}
+	
+	
+	
 }

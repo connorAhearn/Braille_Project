@@ -2,7 +2,7 @@ package src.tests;
 
 import org.junit.*;
 
-import src.enamel.ScenarioCreator;
+import src.enamel.*;
 
 import static org.junit.Assert.*;
 

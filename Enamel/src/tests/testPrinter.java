@@ -77,16 +77,16 @@ public class testPrinter {
 	
 	private void checkNewBlock(Block block) throws InvalidCellException {
 		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		else assertEquals("/~" + block.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + block.cells, reader.nextLine());
 		assertEquals(block.story, reader.nextLine());
-		for(int i = 0; i < block.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= block.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " " + "JUMPP" + i , reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= block.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~" + "JUMPP" + i, reader.nextLine());
 			assertEquals((block.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((block.answer == i) ? block.correctResponse : block.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -230,12 +230,12 @@ public class testPrinter {
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~" + "JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -260,12 +260,12 @@ public class testPrinter {
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		assertEquals(tBlock.story.split("<")[1].split(">")[1], reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~" + "JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -290,12 +290,12 @@ public class testPrinter {
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		assertEquals(tBlock.story.split("<")[1].split(">")[1], reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -319,12 +319,12 @@ public class testPrinter {
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -379,13 +379,13 @@ public class testPrinter {
 	
 	@Test
 	public void testPinTag() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
-		printer = new Printer("test.txt", 5, 6);
+		printer = new Printer("test.txt", 6, 6);
 		Block tBlock = new Block("name", "hey! *waffle* nice", "yes", "", 3, 'c', 5);
 		printer.addBlock(tBlock);
 		printer.print();
 		reader = new Scanner(file);
 		
-		initialBlock(5, 6);
+		initialBlock(6, 6);
 		
 		if(first) first = false;
 		else assertEquals("/~NEXTT", reader.nextLine());
@@ -394,12 +394,12 @@ public class testPrinter {
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[2], reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -409,13 +409,13 @@ public class testPrinter {
 	
 	@Test
 	public void testPinTag1() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
-		printer = new Printer("test.txt", 5, 6);
+		printer = new Printer("test.txt", 6, 6);
 		Block tBlock = new Block("name", "*waffle* nice", "yes", "", 3, 'c', 5);
 		printer.addBlock(tBlock);
 		printer.print();
 		reader = new Scanner(file);
 		
-		initialBlock(5, 6);
+		initialBlock(6, 6);
 		
 		if(first) first = false;
 		else assertEquals("/~NEXTT", reader.nextLine());
@@ -424,12 +424,12 @@ public class testPrinter {
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[2], reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());
@@ -439,13 +439,13 @@ public class testPrinter {
 	
 	@Test
 	public void testPinTag2() throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
-		printer = new Printer("test.txt", 5, 6);
+		printer = new Printer("test.txt", 6, 6);
 		Block tBlock = new Block("name", "nice *waffle*", "yes", "", 3, 'c', 5);
 		printer.addBlock(tBlock);
 		printer.print();
 		reader = new Scanner(file);
 		
-		initialBlock(5, 6);
+		initialBlock(6, 6);
 		
 		if(first) first = false;
 		else assertEquals("/~NEXTT", reader.nextLine());
@@ -453,12 +453,12 @@ public class testPrinter {
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
-		for(int i = 0; i < tBlock.buttonsUsed; i++) {
-			assertEquals("/~skip-button:" + i + " " + buttonLabels[i], reader.nextLine());
+		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
+			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
 		assertEquals("/~user-input", reader.nextLine());
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
-			assertEquals("/~" + buttonLabels[i - 1], reader.nextLine());
+			assertEquals("/~JUMPP" + i, reader.nextLine());
 			assertEquals((tBlock.answer == i) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 			assertEquals((tBlock.answer == i) ? tBlock.correctResponse : tBlock.wrongResponse, reader.nextLine());
 			assertEquals("/~skip:NEXTT", reader.nextLine());

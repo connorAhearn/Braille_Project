@@ -1,10 +1,8 @@
 package src.tests;
 
-import org.junit.*;
+import org.junit.Test;
 
 import src.enamel.*;
-
-import static org.junit.Assert.*;
 
 public class testScenarioCreator {
 

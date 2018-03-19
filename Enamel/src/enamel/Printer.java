@@ -13,12 +13,10 @@ public class Printer {
 	private PrintWriter printWriter;
 	private ArrayList<String> lines = new ArrayList<>();
 	private BrailleInterpreter interpreter = new BrailleInterpreter();
-	private String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR",
-			"FIVEE", "SIXX", "SEVENN", "EIGHTT", "NINEE", "TENN", "ELEVENN",
-			"TWELVEE"};
 	private boolean first = true;
 	private int cellsAmt;
 	private int buttons;
+	private ArrayList<Block> blocks;
 	
 	/**
 	 * Full Constructor
@@ -62,7 +60,7 @@ public class Printer {
 	 */
 	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException {
 		if(first) first = false;
-		else addNext();
+		else addSectionName(block.name);
 		clearPins();
 		displayString(block.cells);
 		addSpoken(block.story);
@@ -74,6 +72,8 @@ public class Printer {
 	}
 	
 	public void addBlockList(ArrayList<Block> blocks) throws OddSpecialCharacterException, InvalidBlockException {
+		
+		this.blocks = blocks;
 		for(Block block : blocks) {
 			addBlock(block);
 		}
@@ -231,8 +231,23 @@ public class Printer {
 		addConfig("NEXTT");
 	}
 	
+	private void addSectionName(String sectionName) {
+		addConfig(sectionName.toUpperCase());
+	}
+	
+	private void nextSection(Block block) {
+		
+		int index = blocks.indexOf(block);
+		
+		if(index == blocks.size() - 1) return;
+		
+		else {
+			addConfig("skip:" + blocks.get(index + 1).name.toUpperCase());
+		}
+	}
+	
 	private void repeatButton(int button) {
-		addConfig("repeat-button:" + button + " " + buttonLabels[button]);
+		addConfig("repeat-button:" + button + " " + "JUMPP" + button);
 	}
 	
 	private void addRepeat() {
@@ -258,8 +273,8 @@ public class Printer {
 	//Input declaring portion of a block
 	//NOTE: buttonsUsed refers to the buttons being used for the given scenario / block
 	private void addInputBlock(int buttonsUsed) {
-		for(int i = 0; i < buttonsUsed; i++) {
-			addConfig("skip-button:" + i + " " + buttonLabels[i]);
+		for(int i = 1; i <= buttonsUsed; i++) {
+			addConfig("skip-button:" + i + " " + "JUMPP" + i);
 		}
 		addConfig("user-input");
 	}
@@ -267,7 +282,7 @@ public class Printer {
 	//Spoken is the spoken response, button is the button that creates the response
 	//NOTE: button refers to the number displayed on the box / simulation. 1 = 1
 	private void addResponse(String spoken, int button, boolean correct) throws OddSpecialCharacterException, InvalidBlockException {
-		addConfig(buttonLabels[button-1]);
+		addConfig("JUMPP" + button);
 		addAnswerSound(correct);
 		addSpoken(spoken);
 		addSkip();

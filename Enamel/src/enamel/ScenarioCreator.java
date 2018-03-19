@@ -33,11 +33,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import src.enamel.Block;
-import src.enamel.InvalidBlockException;
-import src.enamel.OddSpecialCharacterException;
-import src.enamel.Printer;
-import src.enamel.ScenarioParser;
 
 public class ScenarioCreator extends Application {
 
@@ -134,27 +129,6 @@ public class ScenarioCreator extends Application {
 				.parseInt(answerButtonsField.getText());
 	}
 
-	/*
-	 * _________ Scenario menu
-	 * 
-	 * 
-	 * create new scenario load scenario save scenario
-	 * 
-	 * 
-	 */
-	private void createScenarioMenu() {
-		scenarioMenu = new Menu("Scenario");
-
-		newProject = new MenuItem("New Project");
-		loadProject = new MenuItem("Load Project");
-		saveProject = new MenuItem("Save Project");
-		testProject = new MenuItem("Test Project");
-
-		scenarioMenu.getItems().add(newProject);
-		scenarioMenu.getItems().add(loadProject);
-		scenarioMenu.getItems().add(saveProject);
-		scenarioMenu.getItems().add(testProject);
-	}
 
 	/*
 	 * GUI for start Window / primary stage
@@ -202,7 +176,28 @@ public class ScenarioCreator extends Application {
 		layout.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 	}
+	/*
+	 * _________ Scenario menu
+	 * 
+	 * 
+	 * create new scenario load scenario save scenario
+	 * 
+	 * 
+	 */
+	private void createScenarioMenu() {
+		scenarioMenu = new Menu("Scenario");
 
+		newProject = new MenuItem("New Scenario");
+		loadProject = new MenuItem("Load Scenario");
+		saveProject = new MenuItem("Save Scenario");
+		testProject = new MenuItem("Test Scenario");
+
+		scenarioMenu.getItems().add(newProject);
+		scenarioMenu.getItems().add(loadProject);
+		scenarioMenu.getItems().add(saveProject);
+		scenarioMenu.getItems().add(testProject);
+	}
+	
 	/*
 	 * Section menu
 	 * 
@@ -214,34 +209,9 @@ public class ScenarioCreator extends Application {
 	private void createSectionMenu() {
 		sectionMenu = new Menu("Section");
 
-
 		saveSection = new MenuItem("Save Section");
 		clearSection = new MenuItem("Clear Section");
 
-		MenuItem newProject = new MenuItem("New Scenario");
-		MenuItem loadProject = new MenuItem("Load Scenario");
-		MenuItem saveProject = new MenuItem("Save Scenario");
-		MenuItem testProject = new MenuItem("Test Scenario");
-
-
-		scenarioMenu.getItems().add(newProject);
-		scenarioMenu.getItems().add(loadProject);
-		scenarioMenu.getItems().add(saveProject);
-		scenarioMenu.getItems().add(testProject);
-
-		
-		/* Section menu
-		 * 
-		 * 
-		 * save section
-		 * clear section
-		 * 
-		 * 
-		 */
-		Menu sectionMenu = new Menu("Section");
-
-		MenuItem saveSection = new MenuItem("Save Section");
-		MenuItem clearSection = new MenuItem("Clear Section");
 		sectionMenu.getItems().add(saveSection);
 		sectionMenu.getItems().add(clearSection);
 	}

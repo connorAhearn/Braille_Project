@@ -2,7 +2,7 @@ package src.tests;
 
 import org.junit.Test;
 
-import src.enamel.ScenarioCreator;
+import FactoryScenarios.AudioFiles.ScenarioCreator;
 
 public class testScenarioCreator {
 

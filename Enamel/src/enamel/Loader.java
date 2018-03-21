@@ -34,7 +34,7 @@ public class Loader {
 	
 	}
 	
-	public void start(File read) throws EOFException {
+	public ArrayList<Block> start(File read) throws EOFException {
 		String fileLine, lineAfter ="";
 		try {
 			fileScanner = new Scanner(read);
@@ -74,18 +74,24 @@ public class Loader {
 			interpretLine(fileLine, lineAfter);
 		}
 		
+		fileScanner.close();
+		nextLineCheck.close();
 		
-		
+		return blocklist;
 	}
 	
 	private void interpretLine(String line, String nextLine) {
 	
-		if(line.equals("\\n")){ //This my not be correct to it's intended use
+		if(line.equals("")){ //This my not be correct to it's intended use
+			if (nextLine.equals("")) {
+				nextLine = "Space Skiped";
+				return;
+			}
 			
-			// gonna need a copy constructor for block
 			 blocklist.add(new Block(holdOn));
 			stringBasedBoolean = "story";
 			inText = false;
+			
 			
 		}
 		else if(line.length() >= 8 && line.substring(0, 8).equals("/~NEXTT-")) {

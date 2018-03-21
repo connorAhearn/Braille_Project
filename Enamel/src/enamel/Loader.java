@@ -83,7 +83,7 @@ public class Loader {
 		if(line.equals("\\n")){ //This my not be correct to it's intended use
 			
 			// gonna need a copy constructor for block
-			// blocklist.add(new Block(holdOn));
+			 blocklist.add(new Block(holdOn));
 			stringBasedBoolean = "story";
 			inText = false;
 			

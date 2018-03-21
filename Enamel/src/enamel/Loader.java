@@ -141,7 +141,7 @@ public class Loader {
 			if(inText) {
 				String[] param = line.split("\\s");
 				// need to double check which special characters are for which functions
-				switchAdd("^"+param[1]+"^");
+				switchAdd("<"+param[1]+">");
 			}
 			else {
 							// space my be a problem

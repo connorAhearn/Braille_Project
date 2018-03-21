@@ -71,4 +71,20 @@ public class Block {
 	
 	
 	
+	/**
+	 * Copy constructor 
+	 * Author - Micah Arndt
+	 * @param b - Block object to be copied
+	 */
+	
+	public Block(Block b) {
+		this.name = b.name;
+		this.story = b.story;
+		correctResponse = b.correctResponse;
+		wrongResponse = b.wrongResponse;
+		this.answer = b.answer;
+		this.cells = b.cells;
+		this.buttonsUsed = b.buttonsUsed;
+	}
+	
 }

@@ -66,7 +66,7 @@ public class Printer {
 		addSpoken(block.story);
 		addInputBlock(block.buttonsUsed);
 		for(int i = 1; i <= block.buttonsUsed; i++) {
-			addResponse((block.answer == i) ? block.correctResponse : block.wrongResponse, i, (block.answer == i));
+			addResponse(block, (block.answer == i) ? block.correctResponse : block.wrongResponse, i, (block.answer == i));
 		}
 		newLine();
 	}
@@ -281,11 +281,11 @@ public class Printer {
 	
 	//Spoken is the spoken response, button is the button that creates the response
 	//NOTE: button refers to the number displayed on the box / simulation. 1 = 1
-	private void addResponse(String spoken, int button, boolean correct) throws OddSpecialCharacterException, InvalidBlockException {
+	private void addResponse(Block block, String spoken, int button, boolean correct) throws OddSpecialCharacterException, InvalidBlockException {
 		addConfig("JUMPP" + button);
 		addAnswerSound(correct);
 		addSpoken(spoken);
-		addSkip();
+		nextSection(block);
 	}
 	
 	

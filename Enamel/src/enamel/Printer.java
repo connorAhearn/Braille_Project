@@ -13,9 +13,7 @@ public class Printer {
 	private PrintWriter printWriter;
 	private ArrayList<String> lines = new ArrayList<>();
 	private BrailleInterpreter interpreter = new BrailleInterpreter();
-	private boolean first = true;
 	private int cellsAmt;
-	private int buttons;
 	private ArrayList<Block> blocks;
 	
 	/**
@@ -35,7 +33,6 @@ public class Printer {
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
 		this.cellsAmt = cells;
-		this.buttons = buttonsAvailable;
 	}
 	
 	/**
@@ -59,8 +56,7 @@ public class Printer {
 	 * @throws InvalidBlockException 
 	 */
 	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException {
-		if(first) first = false;
-		else addSectionName(block.name);
+		addSectionName(block.name);
 		clearPins();
 		displayString(block.cells);
 		addSpoken(block.story);
@@ -196,6 +192,7 @@ public class Printer {
 		addSpoken("Button " + buttonsAvailable);
 		newLine();
 		addPause(1);
+		newLine();
 	}
 	
 	//Standard line used at the beginning of a block	

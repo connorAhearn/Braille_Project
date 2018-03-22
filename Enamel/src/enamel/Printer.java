@@ -15,6 +15,7 @@ public class Printer {
 	private BrailleInterpreter interpreter = new BrailleInterpreter();
 	private int cellsAmt;
 	private ArrayList<Block> blocks;
+	private int buttons;
 	
 	/**
 	 * Full Constructor
@@ -33,6 +34,7 @@ public class Printer {
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
 		this.cellsAmt = cells;
+		this.buttons = buttonsAvailable;
 	}
 	
 	/**
@@ -56,10 +58,16 @@ public class Printer {
 	 * @throws InvalidBlockException 
 	 */
 	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException {
+		boolean repeat = (block.buttonsUsed < this.buttons);
 		addSectionName(block.name);
 		clearPins();
+		if(repeat) addRepeat();
 		displayString(block.cells);
 		addSpoken(block.story);
+		if(repeat) {
+			endRepeat();
+			repeatButton(this.buttons);
+		}
 		addInputBlock(block.buttonsUsed);
 		for(int i = 1; i <= block.buttonsUsed; i++) {
 			addResponse(block, (block.answer == i) ? block.correctResponse : block.wrongResponse, i, (block.answer == i));
@@ -244,7 +252,7 @@ public class Printer {
 	}
 	
 	private void repeatButton(int button) {
-		addConfig("repeat-button:" + button + " " + "JUMPP" + button);
+		addConfig("repeat-button:" + button);
 	}
 	
 	private void addRepeat() {

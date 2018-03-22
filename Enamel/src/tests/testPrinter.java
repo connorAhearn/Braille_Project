@@ -27,6 +27,7 @@ public class testPrinter {
 	File file;
 	Printer printer;
 	Scanner reader;
+	int buttons;
 	BrailleInterpreter interpreter = new BrailleInterpreter();
 	boolean first;
 	private String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR",
@@ -47,6 +48,7 @@ public class testPrinter {
 	
 	//Commonly reused tests for initial block of file
 	public void initialBlock(int cell, int buttons) {
+		this.buttons = buttons;
 		assertEquals("Cell " + cell, reader.nextLine());
 		assertEquals("Button " + buttons, reader.nextLine());
 		assertEquals("", reader.nextLine());
@@ -54,6 +56,7 @@ public class testPrinter {
 		assertEquals("", reader.nextLine());
 	}
 	
+	/*
 	//Commonly reused tests for new blocks
 	public void checkOldBlock(Block block) throws InvalidCellException {
 		if(first) first = false;
@@ -95,7 +98,7 @@ public class testPrinter {
 		assertEquals("", reader.nextLine());
 	}
 	
-	/*
+	
 	private void checkNewBlock(Block block) throws InvalidCellException {
 		if(first) first = false;
 		else assertEquals("/~" + block.name.toUpperCase(), reader.nextLine());
@@ -117,10 +120,16 @@ public class testPrinter {
 	*/
 	
 	private void checkNewBlock(ArrayList<Block> blocks, Block block) throws InvalidCellException {
+		boolean repeat = (block.buttonsUsed < this.buttons);
 		assertEquals("/~" + block.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + block.cells, reader.nextLine());
 		assertEquals(block.story, reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= block.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " " + "JUMPP" + i , reader.nextLine());
 		}
@@ -275,11 +284,17 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
@@ -306,12 +321,18 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		assertEquals(tBlock.story.split("<")[1].split(">")[1], reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
@@ -338,12 +359,18 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		assertEquals(tBlock.story.split("<")[1].split(">")[1], reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
@@ -370,11 +397,17 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
@@ -446,12 +479,18 @@ public class testPrinter {
 		
 		initialBlock(6, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[2], reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
@@ -478,12 +517,18 @@ public class testPrinter {
 		
 		initialBlock(6, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[2], reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}
@@ -510,11 +555,17 @@ public class testPrinter {
 		
 		initialBlock(6, 6);
 		
+		boolean repeat = (tBlock.buttonsUsed < this.buttons);
 		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
+		if(repeat) assertEquals("/~repeat", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
+		if(repeat) {
+			assertEquals("/~endrepeat", reader.nextLine());
+			assertEquals("/~repeat-button:" + this.buttons, reader.nextLine());
+		}
 		for(int i = 1; i <= tBlock.buttonsUsed; i++) {
 			assertEquals("/~skip-button:" + i + " JUMPP" + i, reader.nextLine());
 		}

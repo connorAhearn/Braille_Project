@@ -58,7 +58,7 @@ public class Block {
 		if(name.equals("")) throw new InvalidBlockException("noname");
 		if(story.equals("")) throw new InvalidBlockException("Story field is empty");
 		if(answer > buttonsUsed) throw new InvalidBlockException("Answer button is outside the range of available buttons");
-		if(answer < 0) throw new InvalidBlockException("Answer button can't have a negative number");
+		if(answer <= 0) throw new InvalidBlockException("Answer button can't have a negative number");
 		
 		this.name = name;
 		this.story = story;

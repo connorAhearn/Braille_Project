@@ -109,8 +109,8 @@ public class ScenarioCreator extends Application {
 			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
 		if (scenarioNameField.getText().isEmpty() || brailleCellsField.getText().isEmpty()
 				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[0-9]+")
-				|| !answerButtonsField.getText().matches("[0-9]+") || Integer.parseInt(brailleCellsField.getText()) == 0 
-						|| Integer.parseInt(answerButtonsField.getText()) == 0) {
+				|| !answerButtonsField.getText().matches("[0-9]+") || Integer.parseInt(brailleCellsField.getText()) == 0
+				|| Integer.parseInt(answerButtonsField.getText()) == 0) {
 			errorWindow.show();
 		} else {
 			try {
@@ -1251,20 +1251,12 @@ public class ScenarioCreator extends Application {
 
 		saveButton.setOnKeyPressed(e -> {
 
-			if (e.getCode() == KeyCode.CONTROL) {
-				saveButton.setOnKeyPressed(e1 -> {
-					if (e1.getCode() == KeyCode.TAB) {
-						clearSectionButton.requestFocus();
-					}
-				});
-			} else {
-				if (e.getCode() == KeyCode.ENTER) {
+			if (e.getCode() == KeyCode.ENTER) {
 
-					saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText,
-							correctText, incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField,
-							notANumberWindow, brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow,
-							saveWindow);
-				}
+				saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
+						incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
+						brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
+
 			}
 		});
 
@@ -1277,6 +1269,15 @@ public class ScenarioCreator extends Application {
 								correctText, incorrectText, comboBoxList, comboBox, brailleCellsField,
 								answerButtonsField, notANumberWindow, brailleWindow, emptyNameWindow, buttonsUsedWindow,
 								emptyStoryWindow, saveWindow);
+					}
+				});
+		
+		// transversal
+		saveButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, KeyCombination.CONTROL_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						clearSectionButton.requestFocus();
 					}
 				});
 
@@ -1293,7 +1294,7 @@ public class ScenarioCreator extends Application {
 		clearSectionButton.setOnKeyPressed(e -> {
 
 			if (e.getCode() == KeyCode.CONTROL) {
-				saveButton.setOnKeyPressed(e1 -> {
+				clearSectionButton.setOnKeyPressed(e1 -> {
 					if (e1.getCode() == KeyCode.TAB) {
 						comboBox.requestFocus();
 					}
@@ -1335,6 +1336,22 @@ public class ScenarioCreator extends Application {
 
 			}
 
+		});
+
+		/*
+		 * test scenario action event
+		 * 
+		 * 
+		 */
+
+		testScenario.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.CONTROL) {
+				testScenario.setOnKeyReleased(e1 -> {
+					if (e.getCode() == KeyCode.TAB) {
+						nameSectionField.requestFocus();
+					}
+				});
+			}
 		});
 
 		// File Menu Selection : new project
@@ -1425,8 +1442,7 @@ public class ScenarioCreator extends Application {
 		});
 
 		// hot key clear
-		clearSection.setAccelerator(
-				new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.META_DOWN));
+		clearSection.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCodeCombination.ALT_DOWN));
 
 		// starting window -> choose audio or visual player
 		testButton.setOnAction(e1 -> {

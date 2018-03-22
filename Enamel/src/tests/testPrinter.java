@@ -51,7 +51,7 @@ public class testPrinter {
 		assertEquals("Button " + buttons, reader.nextLine());
 		assertEquals("", reader.nextLine());
 		assertEquals("/~pause:1", reader.nextLine());
-		first = true;
+		assertEquals("", reader.nextLine());
 	}
 	
 	//Commonly reused tests for new blocks
@@ -117,8 +117,7 @@ public class testPrinter {
 	*/
 	
 	private void checkNewBlock(ArrayList<Block> blocks, Block block) throws InvalidCellException {
-		if(first) first = false;
-		else assertEquals("/~" + block.name.toUpperCase(), reader.nextLine());
+		assertEquals("/~" + block.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + block.cells, reader.nextLine());
 		assertEquals(block.story, reader.nextLine());
@@ -276,8 +275,7 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
@@ -308,8 +306,7 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
@@ -341,8 +338,7 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
@@ -374,8 +370,7 @@ public class testPrinter {
 		
 		initialBlock(5, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
@@ -451,8 +446,7 @@ public class testPrinter {
 		
 		initialBlock(6, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
@@ -484,8 +478,7 @@ public class testPrinter {
 		
 		initialBlock(6, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
@@ -517,8 +510,7 @@ public class testPrinter {
 		
 		initialBlock(6, 6);
 		
-		if(first) first = false;
-		else assertEquals("/~NEXTT", reader.nextLine());
+		assertEquals("/~" + tBlock.name.toUpperCase(), reader.nextLine());
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());

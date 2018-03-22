@@ -175,6 +175,8 @@ public class Loader {
 			}		
 
 		}
+		
+		
 		// may need to change, this is so that the line which don't hold info on the blocks,
 		// don't get added as text.
 		

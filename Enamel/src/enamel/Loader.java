@@ -88,17 +88,33 @@ public class Loader {
 				return;
 			}
 			
-			 blocklist.add(new Block(holdOn));
-			stringBasedBoolean = "story";
-			inText = false;
+			//else if() {
+				
+			//}
 			
+			else {
+				blocklist.add(new Block(holdOn));
+				stringBasedBoolean = "story";
+				inText = false;
+				blockClear();
+			}
 			
 		}
-		else if(line.length() >= 8 && line.substring(0, 8).equals("/~NEXTT-")) {
-			setName(line.substring(8));
+	
+		else if(line.length() >= 7 && line.substring(0, 7).equals("/~JUMPP")) {
+			
+			inText = false;
+			String param = line.substring(2);
+			if (nextLine.length() >= 8 && nextLine.substring(0, 8).equals("/~sound:")) {
+				if (nextLine.substring(8).equals("correct.wav")) { // substring at 2 maybe wrong
+					setAnswer(buttonOrder.indexOf(param));
+				}
+				
+			}
 		}
 		
 		else if(line.length() >= 14 && line.substring(0, 14).equals("/~Skip-button:")) {
+			
 			String[] param;
 			param = line.substring(14).split("\\s"); // possible mistake
 			
@@ -110,16 +126,13 @@ public class Loader {
 					setButtonsUsed(param[0]);
 				}
 			}
+			
 			else {
 				setButtonsUsed(param[0]);
 			}
-			
 			inText = false;
 		}
-		// this one may need to change
-	//	else if(line.length() >= 1 && (line.substring(0, 1).equals("*") || line.substring(0, 0).equals("^"))) {
-		//}
-		
+	
 		else if (line.length() >= 14 && line.substring(0, 14).equals("/~disp-string:")) {
 			if(inText) {
 				String[] param = line.split("\\s");
@@ -131,31 +144,31 @@ public class Loader {
 				inText = true;
 			}
 		}
-		
+		/**
 		else if(line.length() >= 8 && line.substring(0, 8).equals("/~button")) {
 			String[] param = line.substring(8).split("\\s"); // this may not be the appropriate format
 			
 			if (nextLine.length() >= 7 && nextLine.substring(0, 7).equals("/~sound")) {
-				if (nextLine.substring(7).equals(" correct.wav")) { // another instance of " correct.wav" maybe incorrect
+				if (nextLine.substring(7).equals("correct.wav")) { // another instance of " correct.wav" maybe incorrect
 					setAnswer(buttonOrder.indexOf(param[1]));
 				}
 			}
 		}
-
-		else if(line.length() >= 7 && line.substring(0, 7).equals("/~sound")) {
+			**/
+		else if(line.length() >= 8 && line.substring(0, 8).equals("/~sound:")) {
 		
 			if(inText) {
-				String[] param = line.split("\\s");
+				String param = line.substring(8);
 				// need to double check which special characters are for which functions
-				switchAdd("<"+param[1]+">");
+				switchAdd("<"+param+">");
 			}
 			else {
 							// space my be a problem
-				if (line.substring(7).equals(" correct.wav")) {
+				if (line.substring(8).equals("correct.wav")) {
 					stringBasedBoolean = "correct";
 				
 				}
-				else if(line.substring(7).equals(" wrong.wav")) {
+				else if(line.substring(8).equals("wrong.wav")) {
 					stringBasedBoolean = "wrong";
 				}
 				inText = true;
@@ -164,9 +177,11 @@ public class Loader {
 		}
 		// may need to change, this is so that the line which don't hold info on the blocks,
 		// don't get added as text.
+		
 		else if(line.length() >= 2 && line.substring(0, 2).equals("/~")) {
 			
 		}
+		
 		else {
 			switchAdd(line);
 			
@@ -219,5 +234,22 @@ public class Loader {
 			break;
 		}
 	}
+	public void clear() {
+		blocklist.clear();
+		blockClear();
+		
+	}
+	
+	private void blockClear() {
+		holdOn.name = "";
+		holdOn.story = "";
+		holdOn.answer = 1;
+		holdOn.correctResponse = "";
+		holdOn.wrongResponse = "";
+		holdOn.cells = "a";
+		holdOn.buttonsUsed = 1;
+	}
+	
+	
 
 }

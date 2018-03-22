@@ -40,19 +40,20 @@ public class ScenarioCreator extends Application {
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout1, layout, layout12, layout11, layout2, layout3, layout4, layout6, layout8, layout5, layout14,
-			layout7, layout13, layout10, layout9;
+			layout7, layout13, layout15, layout10, layout9;
 	Scene scene1, scene, scene12, scene11, scene2, scene3, scene4, scene6, scene8, scene5, scene14, scene7, scene13,
-			scene10, scene9;
+			scene10, scene9, scene15;
 	Button createButton, testButton, sound, saveButton, testScenario, clearSectionButton, errorMessageButton, okayStart,
 			warningOkay, warningCancel, soundOkay, answerOkay, brailleOkay, emptyNameButton, buttonsUsedWindowOkay,
-			emptyStoryOkay, noSectionSavedOkay, saveOkayButton, scenarioSavedOkay;
+			emptyStoryOkay, noSectionSavedOkay, saveOkayButton, scenarioSavedOkay, clearSectionButtonOkay,
+			clearSectionButtonCancel;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
-			scenarioSavedWindow, warningWindow, playerSelectionWindow;
+			scenarioSavedWindow, warningWindow, playerSelectionWindow, clearSectionWarning;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
-			saveConfirmed, playerSelectionText, projectSavedConfirmed;
+			saveConfirmed, playerSelectionText, projectSavedConfirmed, clearSectionText;
 	Label nameSectionLabel, answerButtonsUsedFieldLabel, storyLabel, brailleLabel, answerLabel, correctLabel,
 			playerLabel, incorrectLabel, scenarioNameFieldLabel, brailleCellsUsedLabel, answerButtonsUsedLabel;
 	Menu scenarioMenu, sectionMenu, goToMenu, soundMenu;
@@ -107,8 +108,9 @@ public class ScenarioCreator extends Application {
 	private void nameNewScenario(Stage scenarioCreator, Stage errorWindow, Stage brailleCellsUsedWindow,
 			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
 		if (scenarioNameField.getText().isEmpty() || brailleCellsField.getText().isEmpty()
-				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[1-9]+")
-				|| !answerButtonsField.getText().matches("[1-9]+")) {
+				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[0-9]+")
+				|| !answerButtonsField.getText().matches("[0-9]+") || Integer.parseInt(brailleCellsField.getText()) == 0 
+						|| Integer.parseInt(answerButtonsField.getText()) == 0) {
 			errorWindow.show();
 		} else {
 			try {
@@ -219,10 +221,8 @@ public class ScenarioCreator extends Application {
 	 */
 	private void createSectionMenu() {
 		sectionMenu = new Menu("Section");
-
 		saveSection = new MenuItem("Save Section");
 		clearSection = new MenuItem("Clear Section");
-
 		sectionMenu.getItems().add(saveSection);
 		sectionMenu.getItems().add(clearSection);
 	}
@@ -263,9 +263,9 @@ public class ScenarioCreator extends Application {
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 7);
 	}
-		
+
 	private void saveSectionSetup() {
-		
+
 		// save section button
 		saveButton = new Button("Save Section");
 		saveButton.setAccessibleRoleDescription("Save button");
@@ -544,9 +544,9 @@ public class ScenarioCreator extends Application {
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 
-	private void savingScenarioGUI() {
+	private void savingSectionGUI() {
 		/*
-		 * confirm save GUI
+		 * confirm section save GUI
 		 * 
 		 * 
 		 * 
@@ -580,7 +580,11 @@ public class ScenarioCreator extends Application {
 				saveWindow.close();
 			}
 		});
+	}
 
+	private void savingScenarioGUI() {
+
+		// confirm save scenario
 		scenarioSavedWindow = new Stage();
 		layout13 = new GridPane();
 		layout13.setHgap(10);
@@ -607,6 +611,75 @@ public class ScenarioCreator extends Application {
 		scenarioSavedOkay.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
 				scenarioSavedWindow.close();
+			}
+		});
+	}
+
+	private void clearSectionWarningGUI() {
+		/*
+		 * confirm section clear GUI
+		 * 
+		 * 
+		 * 
+		 */
+
+		clearSectionWarning = new Stage();
+		layout15 = new GridPane();
+		layout15.setHgap(10);
+		layout15.setVgap(10);
+		layout15.setPadding(new Insets(0, 5, 5, 5));
+
+		scene15 = new Scene(layout15);
+		clearSectionWarning.setScene(scene15);
+		clearSectionWarning.setTitle("Warning");
+		clearSectionText = new Text("Selecting okay will clear all text fields, all unsaved progress will be lost");
+		clearSectionText.setFill(Color.WHITE);
+		layout15.add(clearSectionText, 0, 0);
+		clearSectionButtonOkay = new Button("Okay");
+		clearSectionButtonOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
+		clearSectionButtonOkay.setAccessibleRoleDescription("Okay Button");
+		clearSectionButtonOkay.setAccessibleText(
+				"Selecting okay will clear all text fields, all unsaved progress will be lost, press enter to clear all fields and return to previous screen");
+		layout15.add(clearSectionButtonOkay, 0, 1);
+		clearSectionButtonCancel = new Button("Cancel");
+		clearSectionButtonCancel.setAccessibleRoleDescription("Cancel Button");
+
+		clearSectionButtonCancel.setStyle("-fx-base: #87ceeb;"); // sky blue
+		clearSectionButtonCancel.setAccessibleText("Press enter to return to previous screen");
+		layout15.add(clearSectionButtonCancel, 1, 1);
+		layout15.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		// action events
+		clearSectionButtonOkay.setOnAction(e1 -> {
+			nameSectionField.clear();
+			storyText.clear();
+			correctText.clear();
+			incorrectText.clear();
+			brailleText.clear();
+			answerText.clear();
+			answerButtonsUsedField.clear();
+			clearSectionWarning.close();
+		});
+		clearSectionButtonOkay.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				nameSectionField.clear();
+				storyText.clear();
+				correctText.clear();
+				incorrectText.clear();
+				brailleText.clear();
+				answerText.clear();
+				answerButtonsUsedField.clear();
+				clearSectionWarning.close();
+			}
+		});
+
+		clearSectionButtonCancel.setOnAction(e1 -> {
+			clearSectionWarning.close();
+		});
+		clearSectionButtonCancel.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				clearSectionWarning.close();
 			}
 		});
 	}
@@ -932,7 +1005,7 @@ public class ScenarioCreator extends Application {
 		scenarioNameField = new TextField();
 		scenarioNameText = new Text("Scenario Name");
 		nameBrailleAnswer = new Text(
-				"Enter the name of your scenario, the number of Braille Cells " + "and Answer Buttons available");
+				"Enter the name of your scenario, the number of Braille Cells and Answer Buttons available");
 		layout11.add(nameBrailleAnswer, 0, 0, 2, 1);
 		brailleCellsField = new TextField();
 		brailleCellsText = new Text("Braille Cells Available");
@@ -1056,12 +1129,12 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	private void createSaveButton() {
-		// save section button
+	private void testScenarioButton() {
+		// test scenario button
 		testScenario = new Button("Test Scenario");
 		testScenario.setAccessibleRoleDescription("Test Scenario");
 		testScenario.setAccessibleText("Press enter to test current scenario");
-		testScenario.setStyle("-fx-base: #FFFFFF;"); // sky blue
+		testScenario.setStyle("-fx-base: #FFFFFF;"); // white
 		layout.add(testScenario, 7, 1);
 	}
 
@@ -1091,7 +1164,6 @@ public class ScenarioCreator extends Application {
 		createGotoMenu();
 		createSoundMenu();
 		createMenuBar();
-		// border glow to make things look fancy
 		borderGlowSetup();
 		sectionNameAndButtonsUsed();
 		storyTextSetup();
@@ -1103,7 +1175,7 @@ public class ScenarioCreator extends Application {
 		blank();
 		saveSectionSetup();
 		createSectionComboBox();
-		createSaveButton();
+		testScenarioButton();
 
 		/*
 		 * 
@@ -1147,11 +1219,13 @@ public class ScenarioCreator extends Application {
 		buttonsUsedErrorGUI();
 		storyEmptyErrorGUI();
 		noSectionErrorGUI();
+		clearSectionWarningGUI();
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 
 		savingScenarioGUI();
 		newProjectWarningGUI();
+		savingSectionGUI();
 
 		// ************************* other GUIs *********************
 
@@ -1175,18 +1249,6 @@ public class ScenarioCreator extends Application {
 
 		});
 
-		// hot key save section button
-		saveButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN),
-				new Runnable() {
-					@Override
-					public void run() {
-						saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText,
-								correctText, incorrectText, comboBoxList, comboBox, brailleCellsField,
-								answerButtonsField, notANumberWindow, brailleWindow, emptyNameWindow, buttonsUsedWindow,
-								emptyStoryWindow, saveWindow);
-					}
-				});
-
 		saveButton.setOnKeyPressed(e -> {
 
 			if (e.getCode() == KeyCode.CONTROL) {
@@ -1202,6 +1264,43 @@ public class ScenarioCreator extends Application {
 							correctText, incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField,
 							notANumberWindow, brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow,
 							saveWindow);
+				}
+			}
+		});
+
+		// hot key save section button
+		saveButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText,
+								correctText, incorrectText, comboBoxList, comboBox, brailleCellsField,
+								answerButtonsField, notANumberWindow, brailleWindow, emptyNameWindow, buttonsUsedWindow,
+								emptyStoryWindow, saveWindow);
+					}
+				});
+
+		/*
+		 * clear button on GUI
+		 * 
+		 * 
+		 * 
+		 */
+		clearSectionButton.setOnMouseClicked(e -> {
+			clearSectionWarning.show();
+		});
+
+		clearSectionButton.setOnKeyPressed(e -> {
+
+			if (e.getCode() == KeyCode.CONTROL) {
+				saveButton.setOnKeyPressed(e1 -> {
+					if (e1.getCode() == KeyCode.TAB) {
+						comboBox.requestFocus();
+					}
+				});
+			} else {
+				if (e.getCode() == KeyCode.ENTER) {
+					clearSectionWarning.show();
 				}
 			}
 		});

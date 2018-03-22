@@ -12,7 +12,6 @@ public class Printer {
 	private FileWriter fileWriter;
 	private PrintWriter printWriter;
 	private ArrayList<String> lines = new ArrayList<>();
-	private BrailleInterpreter interpreter = new BrailleInterpreter();
 	private int cellsAmt;
 	private ArrayList<Block> blocks;
 	private int buttons;
@@ -208,10 +207,11 @@ public class Printer {
 		addConfig("disp-clearAll");
 	}
 	
-	//Sets pins for the requested character
+	/*Sets pins for the requested character
 	private void setPins(char letter) throws InvalidCellException {
 		addConfig("disp-cell-pins:0 " + interpreter.getPins(letter));
 	}
+	*/
 	
 	//Adds sound for the response depending on if the response is correct
 	private void addAnswerSound(boolean correct) {
@@ -223,18 +223,21 @@ public class Printer {
 		addConfig("sound:" + fileName);
 	}
 	
-	//Skips to NEXTT, used if another block will follow the current block. used at the end
+	/*Skips to NEXTT, used if another block will follow the current block. used at the end
 	private void addSkip() {
 		addConfig("skip:NEXTT");
 	}
+	*/
 	
 	private void addPause(int length) {
 		addConfig("pause:" + length);
 	}
 	
+	/*
 	private void addNext() {
 		addConfig("NEXTT");
 	}
+	*/
 	
 	private void addSectionName(String sectionName) {
 		addConfig(sectionName.toUpperCase());
@@ -263,9 +266,11 @@ public class Printer {
 		addConfig("endrepeat");
 	}
 	
+	/*
 	private void resetButtons() {
 		addConfig("reset-buttons");
 	}
+	*/
 	
 	private void displayString(String in) throws InvalidBlockException {
 		if(in.length() <= this.cellsAmt) addConfig("disp-string:" + in);

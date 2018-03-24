@@ -60,7 +60,7 @@ public class ScenarioCreator extends Application {
 			playerLabel, incorrectLabel, scenarioNameFieldLabel, brailleCellsUsedLabel, answerButtonsUsedLabel;
 	Menu scenarioMenu, sectionMenu, goToMenu, soundMenu;
 	MenuItem newProject, loadProject, saveProject, testProject, saveSection, clearSection, goToSectionName,
-			goToAnswerButtonsUsed, goToStory, goToBraille, goToAnswer, goToCorrect, goToIncorrect, goToComboBox,
+			goToAnswerButtonsUsed, goToStory, goToBraille, goToAnswer, goToCorrect, goToIncorrect,
 			addSound;
 	MenuBar menuBar;
 	DropShadow borderGlow;
@@ -201,7 +201,6 @@ public class ScenarioCreator extends Application {
 	 */
 	private void createScenarioMenu() {
 		scenarioMenu = new Menu("Scenario");
-
 		newProject = new MenuItem("New Scenario");
 		loadProject = new MenuItem("Load Scenario");
 		saveProject = new MenuItem("Save Scenario");
@@ -247,7 +246,6 @@ public class ScenarioCreator extends Application {
 		goToAnswer = new MenuItem("Answer");
 		goToCorrect = new MenuItem("Correct");
 		goToIncorrect = new MenuItem("Incorrect");
-		goToComboBox = new MenuItem("Drop Down");
 
 		goToMenu.getItems().add(goToSectionName);
 		goToMenu.getItems().add(goToAnswerButtonsUsed);
@@ -256,7 +254,6 @@ public class ScenarioCreator extends Application {
 		goToMenu.getItems().add(goToAnswer);
 		goToMenu.getItems().add(goToCorrect);
 		goToMenu.getItems().add(goToIncorrect);
-		goToMenu.getItems().add(goToComboBox);
 	}
 
 	private void storyTextSetup() {
@@ -673,7 +670,9 @@ public class ScenarioCreator extends Application {
 			answerText.clear();
 			answerButtonsUsedField.clear();
 			clearSectionWarning.close();
+			nameSectionField.requestFocus();
 		});
+		
 		clearSectionButtonOkay.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
 				nameSectionField.clear();
@@ -684,6 +683,7 @@ public class ScenarioCreator extends Application {
 				answerText.clear();
 				answerButtonsUsedField.clear();
 				clearSectionWarning.close();
+				nameSectionField.requestFocus();
 			}
 		});
 
@@ -1135,13 +1135,12 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	private void comboBoxOpenWithEnter() {
-		// combo box open with enter
+	// -- combobox
+	private void comboBoxOpen() {
 		comboBox.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.DOWN) {
 				comboBox.show();
 			}
-			e.consume();
 		});
 	}
 
@@ -1159,7 +1158,6 @@ public class ScenarioCreator extends Application {
 		comboBoxList = FXCollections.observableArrayList();
 		comboBox = new ComboBox<String>(comboBoxList);
 		comboBox.setPrefWidth(200);
-		comboBox.setEditable(true);
 		comboBox.setPromptText("Select a section");
 		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
@@ -1204,7 +1202,7 @@ public class ScenarioCreator extends Application {
 		 * 
 		 */
 
-		comboBoxOpenWithEnter();
+		comboBoxOpen();
 		nameOrBrailleFieldEmptyWindow();
 		setupScenarioGUI(primaryStage);
 		soundGUISetup();
@@ -1217,14 +1215,13 @@ public class ScenarioCreator extends Application {
 		layout1.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		// ****************** warnings ********************************************
+		
+		
+		// ----------------------------<<[warnings 
 
 		/*
-		 * answer field error GUI
+		 -----<<[answer field error GUI
 		 * 
-		 * 
-		 * answer field does not contain a number or has a larger number than the number
-		 * of buttons used
 		 * 
 		 * 
 		 */
@@ -1243,12 +1240,12 @@ public class ScenarioCreator extends Application {
 		newProjectWarningGUI();
 		savingSectionGUI();
 
-		// ************************* other GUIs *********************
+		// ---------<<[ other GUIs 
 
 		visualOrAudioPlayerGUI();
 
 		/*
-		 * accessibility transversal for text area
+		 --------<<[ accessibility transversal for text area
 		 * 
 		 * 
 		 */
@@ -1275,11 +1272,8 @@ public class ScenarioCreator extends Application {
 		});
 
 		/*
-		 * save section button
+		 * -----<<[save section button
 		 * 
-		 * exceptions\: name field is empty story field is empty answer field contains a
-		 * number between 1 and number of answer buttons used braille field is empty or
-		 * contains more letters than the number of braille cells available
 		 * 
 		 * 
 		 */
@@ -1303,11 +1297,9 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// hot key save section
-		saveSection.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
 
 		/*
-		 * clear button on GUI
+		 --------<<[ clear section button
 		 * 
 		 * 
 		 * 
@@ -1331,7 +1323,12 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// return selected comboBox value
+		/*
+		 ----------<<[ return selected comboBox value
+		 *
+		 *
+		 *
+		 */
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
 
 			if (comboBox.getValue() == "New Section") {
@@ -1364,10 +1361,11 @@ public class ScenarioCreator extends Application {
 		});
 
 		/*
-		 * test scenario action event
+		 ---------<{scenario menu action 
 		 * 
 		 * 
 		 */
+		scenarioMenu.show();
 
 		// File Menu Selection : new project
 		newProject.setOnAction(e -> {
@@ -1444,10 +1442,21 @@ public class ScenarioCreator extends Application {
 		});
 
 		/*
-		 * section menu actions
+		 ------<<[section menu actions
 		 * 
 		 * 
 		 */
+		
+		// --
+		saveSection.setOnAction(e -> {
+			saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
+					incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
+					brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
+		}); 
+		
+		saveSection.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+
+		//
 		clearSection.setOnAction(e -> {
 			clearSectionWarning.show();
 			e.consume();
@@ -1455,7 +1464,65 @@ public class ScenarioCreator extends Application {
 
 		// hot key clear
 		clearSection.setAccelerator(
-				new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
+				new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN));
+
+		
+		/* 
+		 ------<<[go to menu
+		 * 
+		 *
+		 */
+
+		goToSectionName.setOnAction(e -> {
+			nameSectionField.requestFocus();
+		});
+
+		goToSectionName.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, KeyCodeCombination.CONTROL_DOWN));
+
+		// --
+		goToAnswerButtonsUsed.setOnAction(e -> {
+			answerButtonsUsedField.requestFocus();
+		});
+
+		goToAnswerButtonsUsed.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, KeyCodeCombination.CONTROL_DOWN));
+
+		// --
+		goToStory.setOnAction(e -> {
+			storyText.requestFocus();
+		});
+		goToStory.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, KeyCodeCombination.CONTROL_DOWN));
+
+		// --
+		goToBraille.setOnAction(e -> {
+			brailleText.requestFocus();
+		});
+		goToBraille.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT4, KeyCodeCombination.CONTROL_DOWN));
+
+		// --
+		goToAnswer.setOnAction(e -> {
+			answerText.requestFocus();
+		});
+		goToAnswer.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT5, KeyCodeCombination.CONTROL_DOWN));
+
+		//--
+		goToCorrect.setOnAction(e -> {
+			correctText.requestFocus();
+		});
+
+		goToCorrect.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT6, KeyCodeCombination.CONTROL_DOWN));
+		
+		//--
+		goToIncorrect.setOnAction(e -> {
+			incorrectText.requestFocus();
+		});
+		goToIncorrect.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT7, KeyCodeCombination.CONTROL_DOWN));
+
+
+
+		/* 
+		 * <<<starting window>>> 
+		 * 
+		 */
 
 		// starting window -> choose audio or visual player
 		testButton.setOnAction(e1 -> {
@@ -1472,10 +1539,10 @@ public class ScenarioCreator extends Application {
 		layout.setGridLinesVisible(false);
 	}
 
-	// ***************** methods ******************
+	// ------------------------<<<{methods} 
 
 	/*
-	 * save section
+	 ----<<[save section]
 	 * 
 	 * sorry this code looks kinda ugly :(
 	 * 

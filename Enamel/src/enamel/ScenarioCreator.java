@@ -45,7 +45,7 @@ public class ScenarioCreator extends Application {
 			layout7, layout13, layout15, layout10, layout9;
 	Scene scene1, scene, scene12, scene11, scene2, scene3, scene4, scene6, scene8, scene5, scene14, scene7, scene13,
 			scene10, scene9, scene15;
-	Button createButton, testButton, sound, saveButton, testScenario, clearSectionButton, errorMessageButton, okayStart,
+	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton, okayStart,
 			warningOkay, warningCancel, soundOkay, answerOkay, brailleOkay, emptyNameButton, buttonsUsedWindowOkay,
 			emptyStoryOkay, noSectionSavedOkay, saveOkayButton, scenarioSavedOkay, clearSectionButtonOkay,
 			clearSectionButtonCancel;
@@ -265,7 +265,7 @@ public class ScenarioCreator extends Application {
 
 		storyText = new TextArea();
 		storyText.setAccessibleRole(AccessibleRole.TOOLTIP);
-		storyText.setAccessibleRoleDescription("story text area");
+		storyText.setAccessibleRoleDescription("story text area, press control tab to skip to next field");
 		storyText.setPrefHeight(250);
 		storyText.setPrefWidth(500);
 		storyText.setOpacity(0.9);
@@ -304,7 +304,7 @@ public class ScenarioCreator extends Application {
 
 		correctText = new TextArea();
 		correctText.setAccessibleRole(AccessibleRole.TOOLTIP);
-		correctText.setAccessibleRoleDescription("Correct response text field");
+		correctText.setAccessibleRoleDescription("Correct response text field, press control tab to skip to next field");
 		correctText.setPrefHeight(100);
 		correctText.setPrefWidth(500);
 		correctText.setOpacity(0.95);
@@ -326,7 +326,7 @@ public class ScenarioCreator extends Application {
 
 		incorrectText = new TextArea();
 		incorrectText.setAccessibleRole(AccessibleRole.TOOLTIP);
-		incorrectText.setAccessibleRoleDescription("incorrect response text field");
+		incorrectText.setAccessibleRoleDescription("incorrect response text field, press control tab to skip to next field");
 		incorrectText.setPrefHeight(100);
 		incorrectText.setPrefWidth(500);
 		incorrectText.setOpacity(0.95);
@@ -368,7 +368,7 @@ public class ScenarioCreator extends Application {
 
 		answerText = new TextField();
 		answerText.setAccessibleRole(AccessibleRole.TOOLTIP);
-		answerText.setAccessibleRoleDescription("answer button number field");
+		answerText.setAccessibleRoleDescription("answer button number field, please enter a number less than or equal to the number of answer buttons used");
 		answerText.setPrefWidth(50);
 		layout.add(answerText, 3, 7);
 
@@ -388,12 +388,12 @@ public class ScenarioCreator extends Application {
 
 		brailleText = new TextField();
 		brailleText.setAccessibleRole(AccessibleRole.TOOLTIP);
-		brailleText.setAccessibleRoleDescription("braille text field");
+		brailleText.setAccessibleRoleDescription("braille text field, the word must be shorter or equal to the number of braille cells available"); 
 		brailleText.setPrefWidth(40);
 		layout.add(brailleText, 0, 7, 2, 1);
 
 		// accessibility for braille text field
-		brailleLabel = new Label("Enter the word \n you want displayed \n on the braille cell");
+		brailleLabel = new Label("Enter the word \nyou want displayed \n on the braille cell");
 		brailleLabel.setLabelFor(brailleText);
 		brailleLabel.setVisible(false);
 		layout.add(brailleLabel, 2, 7);
@@ -413,7 +413,7 @@ public class ScenarioCreator extends Application {
 		layout.add(sectionName, 1, 1, 2, 1);
 
 		// accessibility for braille text field
-		nameSectionLabel = new Label("Enter the name\n for this section \n of your story");
+		nameSectionLabel = new Label("Please Enter the name\n for this section \n of your story");
 		nameSectionLabel.setLabelFor(nameSectionField);
 		nameSectionLabel.setVisible(false);
 		layout.add(nameSectionLabel, 0, 1);
@@ -421,7 +421,7 @@ public class ScenarioCreator extends Application {
 		// number of answer buttons used
 		answerButtonsUsedField = new TextField();
 		answerButtonsUsedField.setAccessibleRole(AccessibleRole.TOOLTIP);
-		answerButtonsUsedField.setAccessibleRoleDescription("answer buttons used number field");
+		answerButtonsUsedField.setAccessibleRoleDescription("answer buttons used number field, please enter a number less than or equal to the number of answer buttons available");
 		answerButtonsUsedField.setPrefWidth(30);
 		layout.add(answerButtonsUsedField, 3, 1);
 		answerButtonsUsedText = new Text("Answer Buttons Used");
@@ -662,28 +662,12 @@ public class ScenarioCreator extends Application {
 
 		// action events
 		clearSectionButtonOkay.setOnAction(e1 -> {
-			nameSectionField.clear();
-			storyText.clear();
-			correctText.clear();
-			incorrectText.clear();
-			brailleText.clear();
-			answerText.clear();
-			answerButtonsUsedField.clear();
-			clearSectionWarning.close();
-			nameSectionField.requestFocus();
+			clearSection();
 		});
 		
 		clearSectionButtonOkay.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
-				nameSectionField.clear();
-				storyText.clear();
-				correctText.clear();
-				incorrectText.clear();
-				brailleText.clear();
-				answerText.clear();
-				answerButtonsUsedField.clear();
-				clearSectionWarning.close();
-				nameSectionField.requestFocus();
+				clearSection();
 			}
 		});
 
@@ -695,6 +679,18 @@ public class ScenarioCreator extends Application {
 				clearSectionWarning.close();
 			}
 		});
+	}
+
+	private void clearSection() {
+		nameSectionField.clear();
+		storyText.clear();
+		correctText.clear();
+		incorrectText.clear();
+		brailleText.clear();
+		answerText.clear();
+		answerButtonsUsedField.clear();
+		clearSectionWarning.close();
+		nameSectionField.requestFocus();
 	}
 
 	private void noSectionErrorGUI() {
@@ -845,6 +841,7 @@ public class ScenarioCreator extends Application {
 		layout6.add(emptyNameButton, 1, 1);
 		layout6.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		emptyNameButton.setAccessibleRoleDescription("Okay button");
 		emptyNameButton.setAccessibleText(
 				"Section can not be saved unless it has a name, press enter to go back to main window");
 
@@ -1017,15 +1014,19 @@ public class ScenarioCreator extends Application {
 		brailleCellsUsedWindow.setScene(scene11);
 		brailleCellsUsedWindow.setTitle("Scenario Setup");
 		scenarioNameField = new TextField();
+		scenarioNameField.setAccessibleRole(AccessibleRole.TOOLTIP);		
 		scenarioNameField.setAccessibleRoleDescription("Scenario name Field");
 		scenarioNameText = new Text("Scenario Name");
 		nameBrailleAnswer = new Text(
 				"Enter the name of your scenario, the number of Braille Cells and Answer Buttons available");
 		layout11.add(nameBrailleAnswer, 0, 0, 2, 1);
 		brailleCellsField = new TextField();
+		brailleCellsField.setAccessibleRole(AccessibleRole.TOOLTIP);		
+		brailleCellsField.setAccessibleRoleDescription("braille cells available Field, please enter a number");
 		brailleCellsText = new Text("Braille Cells Available");
 		answerButtonsField = new TextField();
-
+		answerButtonsField.setAccessibleRole(AccessibleRole.TOOLTIP);		
+		answerButtonsField.setAccessibleRoleDescription("Answer buttons available field, please enter a number");
 		answerButtonsText = new Text("Answer Buttons Available");
 		layout11.add(scenarioNameField, 0, 1);
 		layout11.add(scenarioNameText, 1, 1);
@@ -1144,13 +1145,13 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	private void testScenarioButton() {
-		// test scenario button
-		testScenario = new Button("Test Scenario");
-		testScenario.setAccessibleRoleDescription("Test Scenario");
-		testScenario.setAccessibleText("Press enter to test current scenario");
-		testScenario.setStyle("-fx-base: #FFFFFF;"); // white
-		layout.add(testScenario, 7, 1);
+	private void scenarioMenuButton() {
+		// manage scenario button
+		scenarioMenuButton = new Button("Scenario Menu");
+		scenarioMenuButton.setAccessibleRoleDescription("Test Scenario");
+		scenarioMenuButton.setAccessibleText("Press enter to test current scenario");
+		scenarioMenuButton.setStyle("-fx-base: #FFFFFF;"); // white
+		layout.add(scenarioMenuButton, 7, 1);
 	}
 
 	private void createSectionComboBox() {
@@ -1189,7 +1190,7 @@ public class ScenarioCreator extends Application {
 		clearSectionSetup();
 		blank();
 		createSectionComboBox();
-		testScenarioButton();
+		scenarioMenuButton();
 
 		/*
 		 * 
@@ -1244,32 +1245,7 @@ public class ScenarioCreator extends Application {
 
 		visualOrAudioPlayerGUI();
 
-		/*
-		 --------<<[ accessibility transversal for text area
-		 * 
-		 * 
-		 */
 
-		storyText.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.TAB) {
-				brailleText.requestFocus();
-				e.consume();
-			}
-		});
-
-		correctText.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.TAB) {
-				incorrectText.requestFocus();
-				e.consume();
-			}
-		});
-
-		incorrectText.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.TAB) {
-				saveButton.requestFocus();
-				e.consume();
-			}
-		});
 
 		/*
 		 * -----<<[save section button
@@ -1365,7 +1341,6 @@ public class ScenarioCreator extends Application {
 		 * 
 		 * 
 		 */
-		scenarioMenu.show();
 
 		// File Menu Selection : new project
 		newProject.setOnAction(e -> {
@@ -1435,7 +1410,7 @@ public class ScenarioCreator extends Application {
 
 		// hot key save project
 		saveProject.setAccelerator(
-				new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
+				new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
 		loadProject.setOnAction(e -> {
 
@@ -1459,7 +1434,6 @@ public class ScenarioCreator extends Application {
 		//
 		clearSection.setOnAction(e -> {
 			clearSectionWarning.show();
-			e.consume();
 		});
 
 		// hot key clear

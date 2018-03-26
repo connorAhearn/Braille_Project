@@ -46,7 +46,7 @@ public class ScenarioCreator extends Application {
 	Scene scene1, scene, scene12, scene11, scene2, scene3, scene4, scene6, scene8, scene5, scene14, scene7, scene13,
 			scene10, scene9, scene15;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton, okayStart,
-			warningOkay, warningCancel, soundOkay, answerOkay, brailleOkay, emptyNameButton, buttonsUsedWindowOkay,
+			warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay, emptyNameButton, buttonsUsedWindowOkay,
 			emptyStoryOkay, noSectionSavedOkay, saveOkayButton, scenarioSavedOkay, clearSectionButtonOkay,
 			clearSectionButtonCancel;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
@@ -357,6 +357,25 @@ public class ScenarioCreator extends Application {
 		sound.setAccessibleText("Sound option is currently not available in this version");
 		sound.setStyle("-fx-base: #87ceeb;"); // sky blue
 		layout.add(sound, 7, 7);
+		
+		// sound button events
+		sound.setOnMouseClicked(e -> {
+			soundWindow.show();
+		});
+		
+		sound.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				soundWindow.show();
+			} else {
+				if (e.getCode() == KeyCode.CONTROL) {
+					sound.setOnKeyPressed(e1 -> {
+						if (e1.getCode() == KeyCode.TAB) {
+							correctText.requestFocus();
+						}
+					});
+				}
+			}
+		});
 	}
 
 	private void answerSetup() {
@@ -935,8 +954,8 @@ public class ScenarioCreator extends Application {
 
 	private void soundGUISetup() {
 		/*
-		 * Temp sound GUI
 		 * 
+		 * pop up window adding sound
 		 * 
 		 * 
 		 * 
@@ -953,44 +972,39 @@ public class ScenarioCreator extends Application {
 
 		scene2 = new Scene(layout2);
 		soundWindow.setScene(scene2);
-		soundMessage = new Text("Sorry, the sound option is currently\n" + "not available for this version");
+		soundMessage = new Text("     Would you like to record a sound file\n" + "            or import an existing sound file");
 		soundMessage.setFill(Color.WHITE);
-		layout2.add(soundMessage, 0, 0, 2, 1);
-		soundOkay = new Button("Okay");
-		soundOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
-		soundOkay.setAccessibleRoleDescription("okay button");
-		soundOkay.setAccessibleText(
-				"Sorry, the sound option is currently not available for this version, press enter to go back to main window");
-		layout2.add(soundOkay, 2, 1);
+		layout2.add(soundMessage, 0, 0, 3, 1);
+		soundRecord = new Button("Record sound");
+		soundRecord.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundRecord.setAccessibleRoleDescription("Record sound button");
+		soundRecord.setAccessibleText(
+				"Press enter to start recording sound");
+		layout2.add(soundRecord, 0, 1);
+		soundImport = new Button("Import sound");
+		soundImport.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundImport.setAccessibleRoleDescription("Import sound button");
+		soundImport.setAccessibleText(
+				"Press enter to import a sound file");
+		layout2.add(soundImport, 1, 1);
+		soundExit = new Button("Exit");
+		soundExit.setStyle("-fx-base: #ffffff"); // sky blue
+		soundExit.setAccessibleRoleDescription("Exit sound window button");
+		soundExit.setAccessibleText(
+				"Press enter to exit sound window");
+		layout2.add(soundExit, 2, 1);
+		
 
-		// sound button events
-		sound.setOnMouseClicked(e -> {
-			soundWindow.show();
-
-		});
-		soundOkay.setOnMouseClicked(e -> {
+		// action button for answer okay
+		soundExit.setOnAction(e -> {
 			soundWindow.close();
 		});
-
-		sound.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.ENTER) {
-				soundWindow.show();
-			} else {
-				if (e.getCode() == KeyCode.CONTROL) {
-					sound.setOnKeyPressed(e1 -> {
-						if (e1.getCode() == KeyCode.TAB) {
-							correctText.requestFocus();
-						}
-					});
-				}
-			}
-		});
-
-		soundOkay.setOnKeyPressed(e -> {
+		soundExit.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				soundWindow.close();
 			}
 		});
+
 	}
 
 	private void setupScenarioGUI(Stage primaryStage) {
@@ -1335,6 +1349,12 @@ public class ScenarioCreator extends Application {
 			}
 
 		});
+		
+		answerText.setOnAction(e -> {
+			if (!answerText.getText().matches("[0-9]")) {
+				e.consume();
+			}
+		});
 
 		/*
 		 ---------<{scenario menu action 
@@ -1492,7 +1512,20 @@ public class ScenarioCreator extends Application {
 		goToIncorrect.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT7, KeyCodeCombination.CONTROL_DOWN));
 
 
-
+		/* 
+		 ------<<[sound menu
+		 * 
+		 *
+		 */
+		
+		addSound.setOnAction(e -> {
+			soundWindow.show();
+		});
+	
+		addSound.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
+		
+		
+		
 		/* 
 		 * <<<starting window>>> 
 		 * 

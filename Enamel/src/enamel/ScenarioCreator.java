@@ -1,7 +1,12 @@
 package src.enamel;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.application.Application;
@@ -1004,7 +1009,59 @@ public class ScenarioCreator extends Application {
 				soundWindow.close();
 			}
 		});
+		
+		//Action Listener for soundImport
+		soundImport.setOnAction(e -> {
+			copySoundFile();
+		});
 
+	}
+
+	/**
+	 * Credit for most of this method:
+	 * 
+	 * https://www.journaldev.com/861/java-copy-file
+	 */
+	private void copySoundFile() {
+		soundWindow.close();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Import Sound File");
+		File source = fileChooser.showOpenDialog(scenarioCreator);
+		
+		if(source.getName().contains(".wav")) {
+			File dest = new File("./AudioFiles/" + source.getName());
+			InputStream is = null;
+			OutputStream os = null;
+			try {
+			    is = new FileInputStream(source);
+			    os = new FileOutputStream(dest);
+			    byte[] buffer = new byte[1024];
+			    int length;
+			    while ((length = is.read(buffer)) > 0) {
+			        os.write(buffer, 0, length);
+			    }
+			} 
+			catch (IOException e1) {
+				e1.printStackTrace();
+			} 
+			finally {
+			    try {
+					is.close();
+					os.close();
+				} 
+			    catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			    
+			}
+		}
+		
+		else {
+			//Kevin Error Window
+			
+			//Needs to tell user they should have used .wav file. 
+		}
+		
 	}
 
 	private void setupScenarioGUI(Stage primaryStage) {

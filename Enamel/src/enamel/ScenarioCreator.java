@@ -43,15 +43,15 @@ public class ScenarioCreator extends Application {
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout1, layout, layout12, layout11, layout2, layout3, layout4, layout6, layout8, layout5, layout14,
 			layout7, layout13, layout15, layout10, layout9;
-	Scene scene1, scene, scene12, scene11, scene2, scene3, scene4, scene6, scene8, scene5, scene14, scene7, scene13,
-			scene10, scene9, scene15;
+	Scene scene, scene1, scene12, scene11, scene2, scene3, scene4, scene6, scene8, scene5, scene14, scene7, scene13,
+			scene10, scene9, scene15, scene16;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton, okayStart,
 			warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay, emptyNameButton, buttonsUsedWindowOkay,
 			emptyStoryOkay, noSectionSavedOkay, saveOkayButton, scenarioSavedOkay, clearSectionButtonOkay,
 			clearSectionButtonCancel;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
-			scenarioSavedWindow, warningWindow, playerSelectionWindow, clearSectionWarning;
+			scenarioSavedWindow, warningWindow, playerSelectionWindow, scenarioMenuWindow, clearSectionWarning;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
@@ -396,6 +396,7 @@ public class ScenarioCreator extends Application {
 		answerLabel.setLabelFor(answerText);
 		answerLabel.setVisible(false);
 		layout.add(answerLabel, 3, 7);
+		
 	}
 
 	private void brailleInputSetup() {
@@ -851,7 +852,7 @@ public class ScenarioCreator extends Application {
 
 		scene6 = new Scene(layout6);
 		emptyNameWindow.setScene(scene6);
-		emptyNameWindow.setTitle("Name is empty");
+		emptyNameWindow.setTitle("Section name field is empty");
 		emptyName = new Text("Section can not be saved unless it has a name");
 		emptyName.setFill(Color.WHITE);
 		layout6.add(emptyName, 0, 0);
@@ -1006,6 +1007,67 @@ public class ScenarioCreator extends Application {
 		});
 
 	}
+	
+	private void scenarioMenuGUISetup() {
+		/*
+		 * 
+		 * pop up window adding sound
+		 * 
+		 * 
+		 * 
+		 */
+
+		scenarioMenuWindow = new Stage();
+		scenarioMenuWindow.setTitle("Scenario Menu");
+		layout16 = new GridPane();
+		layout16.setHgap(10);
+		layout16.setVgap(10);
+		layout16.setPadding(new Insets(0, 5, 5, 5));
+		layout16.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.5, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		scene16 = new Scene(layout16);
+		scenarioMenuWindow.setScene(scene16);
+		soundMessage = new Text("     Would you like to record a sound file\n" + "            or import an existing sound file");
+		soundMessage.setFill(Color.WHITE);
+		layout2.add(soundMessage, 0, 0, 3, 1);
+		soundRecord = new Button("Record sound");
+		soundRecord.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundRecord.setAccessibleRoleDescription("Record sound button");
+		soundRecord.setAccessibleText(
+				"Press enter to start recording sound");
+		layout2.add(soundRecord, 0, 1);
+		soundImport = new Button("Import sound");
+		soundImport.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundImport.setAccessibleRoleDescription("Import sound button");
+		soundImport.setAccessibleText(
+				"Press enter to import a sound file");
+		layout2.add(soundImport, 1, 1);
+		soundExit = new Button("Exit");
+		soundExit.setStyle("-fx-base: #ffffff"); // sky blue
+		soundExit.setAccessibleRoleDescription("Exit sound window button");
+		soundExit.setAccessibleText(
+				"Press enter to exit sound window");
+		layout2.add(soundExit, 2, 1);
+		
+
+		// action button for answer okay
+		soundExit.setOnAction(e -> {
+			soundWindow.close();
+		});
+		soundExit.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				soundWindow.close();
+			}
+		});
+	
+	
+	/* 
+	 ----------<[other GUIs
+	 * 
+	 * 
+	 */
+	
 
 	private void setupScenarioGUI(Stage primaryStage) {
 		/*
@@ -1350,11 +1412,6 @@ public class ScenarioCreator extends Application {
 
 		});
 		
-		answerText.setOnAction(e -> {
-			if (!answerText.getText().matches("[0-9]")) {
-				e.consume();
-			}
-		});
 
 		/*
 		 ---------<{scenario menu action 

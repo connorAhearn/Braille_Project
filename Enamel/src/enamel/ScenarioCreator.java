@@ -47,22 +47,23 @@ public class ScenarioCreator extends Application {
 	Printer printer;
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
-	GridPane layout1, layout, layout12, layout11, layout2, layout3, layout4, layout6, layout8, layout5, layout14,
-			layout7, layout13, layout15, layout10, layout9, layout16;
-	Scene scene, scene1, scene12, scene11, scene2, scene3, scene4, scene6, scene8, scene5, scene14, scene7, scene13,
-			scene10, scene9, scene15, scene16;
+	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
+			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18;
+	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10,
+			scene11, scene12, scene13, scene14, scene15, scene16, scene17, scene18;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
 			okayStart, warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay,
 			emptyNameButton, buttonsUsedWindowOkay, emptyStoryOkay, noSectionSavedOkay, saveOkayButton,
-			scenarioSavedOkay, clearSectionButtonOkay, clearSectionButtonCancel, soundErrorButton;
+			scenarioSavedOkay, clearSectionButtonOkay, clearSectionButtonCancel, soundErrorButton, soundNameOkay,
+			soundNameCancel, nameSoundErrorButton;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
 			scenarioSavedWindow, warningWindow, playerSelectionWindow, scenarioMenuWindow, soundErrorWindow,
-			clearSectionWarning;
+			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
-			saveConfirmed, playerSelectionText, projectSavedConfirmed, clearSectionText, soundErrorText;
+			saveConfirmed, playerSelectionText, projectSavedConfirmed, clearSectionText, soundErrorText, soundNameText, soundNameErrorText;
 	Label nameSectionLabel, answerButtonsUsedFieldLabel, storyLabel, brailleLabel, answerLabel, correctLabel,
 			playerLabel, incorrectLabel, scenarioNameFieldLabel, brailleCellsUsedLabel, answerButtonsUsedLabel;
 	Menu scenarioMenu, sectionMenu, goToMenu, soundMenu;
@@ -71,7 +72,7 @@ public class ScenarioCreator extends Application {
 	MenuBar menuBar;
 	DropShadow borderGlow;
 	TextField nameSectionField, answerButtonsUsedField, brailleText, answerText, scenarioNameField, brailleCellsField,
-			answerButtonsField;
+			answerButtonsField, soundNameField;
 	TextArea storyText, correctText, incorrectText;
 	ObservableList<String> comboBoxList;
 	ComboBox<String> comboBox;
@@ -82,6 +83,8 @@ public class ScenarioCreator extends Application {
 	private GridPane recordLayout;
 	private Button exitButton;
 	private boolean recording;
+
+
 
 	/*
 	 * GUI for start Window / primary stage
@@ -375,7 +378,7 @@ public class ScenarioCreator extends Application {
 		sectionName.setFill(Color.GHOSTWHITE);
 		layout.add(sectionName, 1, 1, 2, 1);
 
-		// accessibility for braille text field
+		// accessibility for answer text field
 		nameSectionLabel = new Label("Please Enter the name\n for this section \n of your story");
 		nameSectionLabel.setLabelFor(nameSectionField);
 		nameSectionLabel.setVisible(false);
@@ -510,7 +513,7 @@ public class ScenarioCreator extends Application {
 				"Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
 		layout10.add(warningOkay, 0, 4);
 		warningCancel = new Button("Cancel");
-		warningCancel.setStyle("-fx-base: #ffffff;"); 
+		warningCancel.setStyle("-fx-base: #ffffff;");
 		warningCancel.setAccessibleRoleDescription("Cancel button");
 		warningCancel.setAccessibleText("Press enter to return to main window");
 		layout10.add(warningCancel, 2, 4);
@@ -606,7 +609,8 @@ public class ScenarioCreator extends Application {
 		scene15 = new Scene(layout15);
 		clearSectionWarning.setScene(scene15);
 		clearSectionWarning.setTitle("Warning");
-		clearSectionText = new Text("                 Selecting okay will clear all text fields, all unsaved progress will be lost");
+		clearSectionText = new Text(
+				"                 Selecting okay will clear all text fields, all unsaved progress will be lost");
 		clearSectionText.setFill(Color.WHITE);
 		layout15.add(clearSectionText, 0, 0);
 		clearSectionButtonOkay = new Button("Okay");
@@ -618,7 +622,7 @@ public class ScenarioCreator extends Application {
 		clearSectionButtonCancel = new Button("Cancel");
 		clearSectionButtonCancel.setAccessibleRoleDescription("Cancel Button");
 
-		clearSectionButtonCancel.setStyle("-fx-base: #ffffff;"); 
+		clearSectionButtonCancel.setStyle("-fx-base: #ffffff;");
 		clearSectionButtonCancel.setAccessibleText("Press enter to return to previous screen");
 		layout15.add(clearSectionButtonCancel, 1, 1);
 		layout15.setBackground(
@@ -892,6 +896,49 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
+	
+	/**
+	 * section name empty GUI
+	 * 
+	 * 
+	 * 
+	 */
+
+	private void nameSoundErrorGUI() {
+
+		nameSoundErrorWindow = new Stage();
+		layout18 = new GridPane();
+		layout18.setHgap(10);
+		layout18.setVgap(10);
+		layout18.setPadding(new Insets(0, 5, 5, 5));
+
+		scene18 = new Scene(layout18);
+		nameSoundErrorWindow.setScene(scene18);
+		nameSoundErrorWindow.setTitle("Error Sound file name empty");
+		soundNameErrorText = new Text("Sound file can not be saved unless it has a name");
+		soundNameErrorText.setFill(Color.WHITE);
+		layout18.add(soundNameErrorText, 0, 0);
+		nameSoundErrorButton = new Button("Okay");
+		nameSoundErrorButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		layout18.add(nameSoundErrorButton, 1, 1);
+		layout18.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		nameSoundErrorButton.setAccessibleRoleDescription("Okay button");
+		nameSoundErrorButton.setAccessibleText(
+				"Sound file can not be saved unless it has a name, press enter to go back to previous window");
+
+		// action event
+		nameSoundErrorButton.setOnAction(e1 -> {
+			nameSoundErrorWindow.close();
+			nameSoundFileWindow.show();
+		});
+		nameSoundErrorButton.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				nameSoundErrorWindow.close();
+				nameSoundFileWindow.show();
+			}
+		});
+	}
 
 	/**
 	 * answer field is not a number GUI
@@ -1035,22 +1082,97 @@ public class ScenarioCreator extends Application {
 				soundWindow.close();
 			}
 		});
-		
+
 		soundRecord.setOnAction(e -> {
-			recordSoundGUI();
 			soundWindow.close();
+			nameSoundFileWindow.show();
 		});
 
 		soundRecord.setOnKeyReleased(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				soundWindow.close();
-				recordSoundGUI();
+				nameSoundFileWindow.show();
 			}
-				
+
 		});
 
 	}
-	
+
+	/**
+	 * name sound file
+	 * 
+	 * 
+	 */
+
+	private void nameSoundFileGUI() {
+
+		nameSoundFileWindow = new Stage();
+		nameSoundFileWindow.setTitle("Name Sound File");
+		layout17 = new GridPane();
+		layout17.setHgap(10);
+		layout17.setVgap(10);
+		layout17.setPadding(new Insets(20, 20, 20, 20));
+		layout17.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.5, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		scene17 = new Scene(layout17);
+		nameSoundFileWindow.setScene(scene17);
+		soundNameText = new Text("Name your sound file");
+		soundNameText.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		soundNameText.setFill(Color.GHOSTWHITE);
+		layout17.add(soundNameText, 0, 0);
+
+		soundNameField = new TextField();
+		soundNameField.setAccessibleRole(AccessibleRole.TOOLTIP);
+		soundNameField.setAccessibleRoleDescription("Name sound file text field, please name your sound file");
+		soundNameField.setPrefWidth(70);
+		layout17.add(soundNameField, 0, 1, 2, 1);
+
+		soundNameOkay = new Button("Okay");
+		soundNameOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundNameOkay.setAccessibleRoleDescription("Okay button");
+		soundNameOkay.setAccessibleText("Press enter to confirm sound file name");
+		layout17.add(soundNameOkay, 0, 2);
+
+		soundNameCancel = new Button("Exit");
+		soundNameCancel.setStyle("-fx-base: #ffffff"); // white
+		soundNameCancel.setAccessibleRoleDescription("Exit button");
+		soundNameCancel.setAccessibleText("Press enter to return to main window");
+		layout17.add(soundNameCancel, 1, 2);
+
+		// action events
+		soundNameOkay.setOnAction(e -> {
+			if (soundNameField.getText().length() == 0) {
+				nameSoundErrorWindow.show();
+			} else {
+			recordWindow.show();
+			}
+		});
+
+		soundNameOkay.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				recordWindow.show();
+			}
+		});
+
+		soundNameCancel.setOnAction(e -> {
+			nameSoundFileWindow.close();
+		});
+
+		soundNameCancel.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				nameSoundFileWindow.close();
+			}
+		});
+
+	}
+
+	/**
+	 * record sound
+	 * 
+	 * 
+	 */
+
 	private void recordSoundGUI() {
 		recordWindow = new Stage();
 		recordWindow.setTitle("Record");
@@ -1065,39 +1187,34 @@ public class ScenarioCreator extends Application {
 		record = new Button("Start Recording");
 		record.setMinSize(150, 70);
 		record.setStyle("-fx-base: #87ceeb;"); // sky blue
-		record.setAccessibleRoleDescription("Recording Sound");
+		record.setAccessibleRoleDescription("Recording sound button");
 		record.setAccessibleText("Press enter to start recording sound. Press enter again to stop recording");
 		recordLayout.add(record, 0, 1);
-		
 		exitButton = new Button("Exit");
-		exitButton.setMinSize(150, 70);
-		exitButton.setStyle("-fx-base: #ffffff"); // sky blue
+		exitButton.setStyle("-fx-base: #ffffff"); // white
 		exitButton.setAccessibleRoleDescription("Exit sound window button");
 		exitButton.setAccessibleText("Press enter to exit sound window");
-		
+
 		recordLayout.add(exitButton, 3, 1);
-		recordWindow.show();
-		
 		exitButton.setOnAction(e -> {
 			recordWindow.close();
 		});
-		
+
 		exitButton.setOnKeyReleased(e -> {
-			if(e.getCode() == KeyCode.ENTER) {
+			if (e.getCode() == KeyCode.ENTER) {
 				recordWindow.close();
 			}
 		});
-		
-		//Name of file needs to go in this constructor
+
+		// Name of file needs to go in this constructor
 		SoundRecorder recorder = new SoundRecorder("recorded");
-		
+
 		record.setOnAction(e -> {
-			if(recording) {
+			if (recording) {
 				recorder.finish();
 				recording = false;
 				recordWindow.close();
-			}
-			else {
+			} else {
 				recorder.start();
 				recording = true;
 				record.setText("Stop recording");
@@ -1105,14 +1222,13 @@ public class ScenarioCreator extends Application {
 				record.setAccessibleText("Press enter to end the recording");
 			}
 		});
-		
+
 		record.setOnKeyReleased(e -> {
-			if(e.getCode() == KeyCode.ENTER) {
-				if(recording) {
+			if (e.getCode() == KeyCode.ENTER) {
+				if (recording) {
 					recorder.finish();
 					recording = false;
-				}
-				else {
+				} else {
 					recorder.start();
 					recording = true;
 					record.setText("Stop recording");
@@ -1271,7 +1387,6 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-
 	private void scenarioMenuButton() {
 		// manage scenario button
 		scenarioMenuButton = new Button("Scenario Menu");
@@ -1280,9 +1395,9 @@ public class ScenarioCreator extends Application {
 		scenarioMenuButton.setStyle("-fx-base: #FFFFFF;"); // white
 		layout.add(scenarioMenuButton, 7, 1);
 	}
-	
-	/*.*
-	 * comboBox
+
+	/*
+	 * .* comboBox
 	 * 
 	 * 
 	 */
@@ -1296,7 +1411,7 @@ public class ScenarioCreator extends Application {
 		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
 	}
-	
+
 	private void comboBoxOpen() {
 		comboBox.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.DOWN) {
@@ -1332,6 +1447,8 @@ public class ScenarioCreator extends Application {
 		blank();
 		createSectionComboBox();
 		scenarioMenuButton();
+		comboBoxOpen();
+
 
 		/*
 		 * 
@@ -1344,9 +1461,11 @@ public class ScenarioCreator extends Application {
 		 * 
 		 */
 
-		comboBoxOpen();
 		setupScenarioGUI(primaryStage);
 		soundGUISetup();
+		nameSoundFileGUI();
+		recordSoundGUI();
+		nameSoundErrorGUI();
 
 		// Scene
 		primaryStage.setTitle("Welcome");
@@ -1358,8 +1477,8 @@ public class ScenarioCreator extends Application {
 
 		// ----------------------------<<[warnings
 
-		/*
-		 * -----<<[answer field error GUI
+		/**
+		 * GUI for errors
 		 * 
 		 * 
 		 * 
@@ -1373,7 +1492,6 @@ public class ScenarioCreator extends Application {
 		noSectionErrorGUI();
 		clearSectionWarningGUI();
 		soundErrorWindowGUI();
-		;
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1445,7 +1563,7 @@ public class ScenarioCreator extends Application {
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
 
 			if (comboBox.getValue() == "New Section") {
-				
+
 				clearSectionWarning.show();
 
 			} else {
@@ -1802,8 +1920,7 @@ public class ScenarioCreator extends Application {
 							|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer
 									.parseInt(answerButtonsField.getText())) {
 						buttonsUsedWindow.show();
-					}
-					else if (storyText.getText().length() == 0) {
+					} else if (storyText.getText().length() == 0) {
 						emptyStoryWindow.show();
 					}
 

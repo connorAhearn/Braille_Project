@@ -1033,7 +1033,7 @@ public class ScenarioCreator extends Application {
 			if (e.getCode() == KeyCode.ENTER) {
 				copySoundFile();
 				soundWindow.close();
-				}
+			}
 		});
 		
 		soundRecord.setOnAction(e -> {
@@ -1066,7 +1066,7 @@ public class ScenarioCreator extends Application {
 		record.setMinSize(150, 70);
 		record.setStyle("-fx-base: #87ceeb;"); // sky blue
 		record.setAccessibleRoleDescription("Recording Sound");
-		record.setAccessibleText("Press enter to start recording sound");
+		record.setAccessibleText("Press enter to start recording sound. Press enter again to stop recording");
 		recordLayout.add(record, 0, 1);
 		
 		exitButton = new Button("Exit");
@@ -1095,10 +1095,14 @@ public class ScenarioCreator extends Application {
 			if(recording) {
 				recorder.finish();
 				recording = false;
+				recordWindow.close();
 			}
 			else {
 				recorder.start();
 				recording = true;
+				record.setText("Stop recording");
+				record.setAccessibleRoleDescription("End Recording");
+				record.setAccessibleText("Press enter to end the recording");
 			}
 		});
 		
@@ -1111,6 +1115,9 @@ public class ScenarioCreator extends Application {
 				else {
 					recorder.start();
 					recording = true;
+					record.setText("Stop recording");
+					record.setAccessibleRoleDescription("End Recording");
+					record.setAccessibleText("Press enter to end the recording");
 				}
 			}
 		});

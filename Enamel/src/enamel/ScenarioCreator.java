@@ -76,79 +76,6 @@ public class ScenarioCreator extends Application {
 	ComboBox<String> comboBox;
 	RadioButton audioButton, visualButton;
 
-	// ***************** methods ******************
-
-	/*
-	 * run test
-	 * 
-	 * 
-	 */
-	private void runTest(Stage primaryStage, Stage playerSelectionWindow, RadioButton visualButton,
-			RadioButton audioButton) {
-		primaryStage.close();
-		playerSelectionWindow.show();
-
-		visualButton.setOnAction(e2 -> {
-			playerSelectionWindow.close();
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open Scenario File");
-			File file = fileChooser.showOpenDialog(primaryStage);
-			ScenarioParser s = new ScenarioParser(true);
-			s.setScenarioFile(file.getAbsolutePath());
-		});
-
-		audioButton.setOnAction(e3 -> {
-			playerSelectionWindow.close();
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open Scenario File");
-			File file = fileChooser.showOpenDialog(primaryStage);
-			ScenarioParser s = new ScenarioParser(false);
-			s.setScenarioFile(file.getAbsolutePath());
-		});
-	}
-
-	/*
-	 * creating / naming new scenario
-	 * 
-	 * 
-	 */
-	private void nameNewScenario(Stage scenarioCreator, Stage errorWindow, Stage brailleCellsUsedWindow,
-			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
-		if (scenarioNameField.getText().isEmpty() || brailleCellsField.getText().isEmpty()
-				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[0-9]+")
-				|| !answerButtonsField.getText().matches("[0-9]+") || Integer.parseInt(brailleCellsField.getText()) == 0
-				|| Integer.parseInt(answerButtonsField.getText()) == 0) {
-			errorWindow.show();
-		} else {
-			try {
-				scenarioCreator.show();
-				brailleCellsUsedWindow.close();
-			} catch (NumberFormatException e3) {
-				errorWindow.show();
-				e3.printStackTrace();
-			}
-		}
-	}
-
-	/*
-	 * load sections
-	 * 
-	 */
-
-	private void fillFields(TextField nameSectionField, TextArea storyText, TextField brailleText, TextField answerText,
-			TextArea correctText, TextArea incorrectText, TextField answerButtonsField) {
-		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).story = storyText.getText();
-		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).correctResponse = correctText
-				.getText();
-		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).wrongResponse = incorrectText
-				.getText();
-		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).cells = brailleText.getText();
-		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).answer = Integer
-				.parseInt(answerText.getText());
-		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).buttonsUsed = Integer
-				.parseInt(answerButtonsField.getText());
-	}
-
 	/*
 	 * GUI for start Window / primary stage
 	 *
@@ -161,7 +88,7 @@ public class ScenarioCreator extends Application {
 		layout1 = new GridPane();
 		layout1.setHgap(10);
 		layout1.setVgap(10);
-		layout1.setPadding(new Insets(5, 5, 10, 5));
+		layout1.setPadding(new Insets(5, 15, 10, 15));
 		scene1 = new Scene(layout1, 550, 200);
 
 		startWindowText = new Text("                       Welcome to Scenario Creator");
@@ -574,12 +501,12 @@ public class ScenarioCreator extends Application {
 		warningOkay.setAccessibleRoleDescription("Okay button");
 		warningOkay.setAccessibleText(
 				"Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
-		layout10.add(warningOkay, 2, 4);
+		layout10.add(warningOkay, 0, 4);
 		warningCancel = new Button("Cancel");
-		warningCancel.setStyle("-fx-base: #87ceeb;"); // sky blue
+		warningCancel.setStyle("-fx-base: #ffffff;"); 
 		warningCancel.setAccessibleRoleDescription("Cancel button");
 		warningCancel.setAccessibleText("Press enter to return to main window");
-		layout10.add(warningCancel, 0, 4);
+		layout10.add(warningCancel, 2, 4);
 		layout10.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 	}
@@ -672,7 +599,7 @@ public class ScenarioCreator extends Application {
 		scene15 = new Scene(layout15);
 		clearSectionWarning.setScene(scene15);
 		clearSectionWarning.setTitle("Warning");
-		clearSectionText = new Text("Selecting okay will clear all text fields, all unsaved progress will be lost");
+		clearSectionText = new Text("                 Selecting okay will clear all text fields, all unsaved progress will be lost");
 		clearSectionText.setFill(Color.WHITE);
 		layout15.add(clearSectionText, 0, 0);
 		clearSectionButtonOkay = new Button("Okay");
@@ -684,7 +611,7 @@ public class ScenarioCreator extends Application {
 		clearSectionButtonCancel = new Button("Cancel");
 		clearSectionButtonCancel.setAccessibleRoleDescription("Cancel Button");
 
-		clearSectionButtonCancel.setStyle("-fx-base: #87ceeb;"); // sky blue
+		clearSectionButtonCancel.setStyle("-fx-base: #ffffff;"); 
 		clearSectionButtonCancel.setAccessibleText("Press enter to return to previous screen");
 		layout15.add(clearSectionButtonCancel, 1, 1);
 		layout15.setBackground(
@@ -711,26 +638,15 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	private void clearSection() {
-		nameSectionField.clear();
-		storyText.clear();
-		correctText.clear();
-		incorrectText.clear();
-		brailleText.clear();
-		answerText.clear();
-		answerButtonsUsedField.clear();
-		clearSectionWarning.close();
-		nameSectionField.requestFocus();
-	}
+	/**
+	 * no section saved GUI
+	 * 
+	 * pop up when user tries to save a scenario but there are no saved sections
+	 * 
+	 * 
+	 */
 
 	private void noSectionErrorGUI() {
-		/*
-		 * warning window : scenario can not be saved without one completed section
-		 * 
-		 * 
-		 * 
-		 * 
-		 */
 
 		noSectionsSavedWindow = new Stage();
 		layout14 = new GridPane();
@@ -764,14 +680,15 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/**
+	 * story field empty error GUI
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+
 	private void storyEmptyErrorGUI() {
-		/*
-		 * story field empty error GUI
-		 * 
-		 * 
-		 * 
-		 * 
-		 */
 
 		emptyStoryWindow = new Stage();
 		layout5 = new GridPane();
@@ -805,13 +722,15 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/**
+	 * buttons used error GUI
+	 * 
+	 * 
+	 * 
+	 */
+
 	private void buttonsUsedErrorGUI() {
-		/*
-		 * buttons used error Window
-		 * 
-		 * 
-		 * 
-		 */
+
 		buttonsUsedWindow = new Stage();
 		layout8 = new GridPane();
 		layout8.setHgap(10);
@@ -846,13 +765,14 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/**
+	 * section name empty GUI
+	 * 
+	 * 
+	 * 
+	 */
+
 	private void sectionEmptyErrorGUI() {
-		/*
-		 * section name empty GUI
-		 * 
-		 * 
-		 * 
-		 */
 
 		emptyNameWindow = new Stage();
 		layout6 = new GridPane();
@@ -886,16 +806,17 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/**
+	 * Braille field error GUI
+	 * 
+	 * 
+	 * braille field contains a word longer than the number of braille cells
+	 * available
+	 * 
+	 * 
+	 */
+
 	private void brailleFieldErrorGUI() {
-		/*
-		 * Braille field error GUI
-		 * 
-		 * 
-		 * braille field contains a word longer than the number of braille cells
-		 * available
-		 * 
-		 * 
-		 */
 
 		brailleWindow = new Stage();
 		layout4 = new GridPane();
@@ -907,14 +828,14 @@ public class ScenarioCreator extends Application {
 		brailleWindow.setScene(scene4);
 		brailleWindow.setTitle("Error");
 		brailleEntry = new Text(
-				"The braille field can not be empty or contain a word longer than the number of braille cells available");
+				"The braille field can only contain letters, and can not be empty or have a word longer than the number of braille cells available");
 		brailleEntry.setFill(Color.WHITE);
 		layout4.add(brailleEntry, 0, 0, 2, 1);
 		brailleOkay = new Button("Okay");
 		brailleOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
 		brailleOkay.setAccessibleRoleDescription("Okay button");
 		brailleOkay.setAccessibleText(
-				"The braille field can not be empty or contain a word longer than the number of braille cells available, press enter to return to main window");
+				"The braille field can only contain letters, and can not be empty or have a word longer than the number of braille cells available, press enter to return to main window");
 		layout4.add(brailleOkay, 2, 1);
 		layout4.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -930,7 +851,7 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	private void soundErrorWindowSetup() {
+	private void soundErrorWindowGUI() {
 		soundErrorWindow = new Stage();
 		layout16 = new GridPane();
 		layout16.setHgap(10);
@@ -964,14 +885,13 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
-	
-	
-	/** 
-	 *answer field is not a number
+
+	/**
+	 * answer field is not a number GUI
 	 *
 	 *
 	 */
-	private void notANumberWindowSetup() {
+	private void notANumberWindowGUI() {
 		notANumberWindow = new Stage();
 		layout3 = new GridPane();
 		layout3.setHgap(10);
@@ -1004,45 +924,87 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/**
+	 * Error GUI - for brailleCellsUsedWindow errors: no scenario name braille field
+	 * empty answer field empty
+	 * 
+	 * 
+	 */
+
+	private void nameOrBrailleFieldEmptyWindow() {
+
+		errorWindow = new Stage();
+		layout12 = new GridPane();
+		layout12.setHgap(10);
+		layout12.setVgap(10);
+		layout12.setPadding(new Insets(5, 5, 5, 5));
+		layout12.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.4, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		scene12 = new Scene(layout12);
+		errorWindow.setScene(scene12);
+		errorWindow.setTitle("Error");
+		errorMessage = new Text(
+				"You need to have a scenario name, at least one braille cell and one answer button to start creating a scenario");
+		errorMessage.setFill(Color.WHITE);
+		layout12.add(errorMessage, 0, 0, 2, 1);
+		errorMessageButton = new Button("Okay");
+		errorMessageButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		errorMessageButton.setAccessibleRoleDescription("Okay button");
+		errorMessageButton.setAccessibleText(
+				"Make sure you have given your scenario a name, that the braille cell field contains a number higher than one "
+						+ "and that the answer buttons available field contains a number higher than one press enter to return to previous window");
+		layout12.add(errorMessageButton, 2, 1);
+
+		// action event
+		errorMessageButton.setOnAction(e1 -> {
+			errorWindow.close();
+		});
+		errorMessageButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				errorWindow.close();
+			}
+		});
+	}
+
+	/*
+	 * 
+	 * pop up window adding sound
+	 * 
+	 * 
+	 * 
+	 */
+
 	private void soundGUISetup() {
-		/*
-		 * 
-		 * pop up window adding sound
-		 * 
-		 * 
-		 * 
-		 */
 
 		soundWindow = new Stage();
 		soundWindow.setTitle("Sound Menu");
 		layout2 = new GridPane();
 		layout2.setHgap(10);
 		layout2.setVgap(10);
-		layout2.setPadding(new Insets(0, 5, 5, 5));
+		layout2.setPadding(new Insets(20, 20, 20, 20));
 		layout2.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.5, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		scene2 = new Scene(layout2);
 		soundWindow.setScene(scene2);
-		soundMessage = new Text(
-				"     Would you like to record a sound file\n" + "            or import an existing sound file");
-		soundMessage.setFill(Color.WHITE);
-		layout2.add(soundMessage, 0, 0, 3, 1);
 		soundRecord = new Button("Record sound");
+		soundRecord.setMinSize(150, 70);
 		soundRecord.setStyle("-fx-base: #87ceeb;"); // sky blue
 		soundRecord.setAccessibleRoleDescription("Record sound button");
 		soundRecord.setAccessibleText("Press enter to start recording sound");
 		layout2.add(soundRecord, 0, 1);
 		soundImport = new Button("Import sound");
+		soundImport.setMinSize(150, 70);
 		soundImport.setStyle("-fx-base: #87ceeb;"); // sky blue
 		soundImport.setAccessibleRoleDescription("Import sound button");
 		soundImport.setAccessibleText("Press enter to import a sound file");
-		layout2.add(soundImport, 1, 1);
+		layout2.add(soundImport, 3, 1);
 		soundExit = new Button("Exit");
 		soundExit.setStyle("-fx-base: #ffffff"); // sky blue
 		soundExit.setAccessibleRoleDescription("Exit sound window button");
 		soundExit.setAccessibleText("Press enter to exit sound window");
-		layout2.add(soundExit, 2, 1);
+		layout2.add(soundExit, 6, 1);
 
 		// action button for answer okay
 		soundExit.setOnAction(e -> {
@@ -1058,10 +1020,10 @@ public class ScenarioCreator extends Application {
 		soundImport.setOnAction(e -> {
 			copySoundFile();
 		});
-		
-		soundImport.setOnKeyReleased(e -> { 
+
+		soundImport.setOnKeyReleased(e -> {
 			if (e.getCode() == KeyCode.ENTER)
-			copySoundFile();
+				copySoundFile();
 		});
 
 	}
@@ -1173,7 +1135,7 @@ public class ScenarioCreator extends Application {
 		answerButtonsUsedLabel.setVisible(false);
 		layout11.add(answerButtonsUsedLabel, 0, 3);
 
-		okayStart = new Button("Okay");
+		okayStart = new Button("Create");
 		okayStart.setStyle("-fx-base: #87ceeb;"); // sky blue
 		okayStart.setAccessibleRoleDescription("Okay button");
 		okayStart.setAccessibleText("Press enter to start creating a scenario");
@@ -1214,57 +1176,6 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	private void nameOrBrailleFieldEmptyWindow() {
-		/*
-		 * Error GUI - for brailleCellsUsedWindow
-		 * 
-		 * 
-		 * errors: no scenario name braille field empty answer field empty
-		 * 
-		 * 
-		 */
-		errorWindow = new Stage();
-		layout12 = new GridPane();
-		layout12.setHgap(10);
-		layout12.setVgap(10);
-		layout12.setPadding(new Insets(5, 5, 5, 5));
-		layout12.setBackground(
-				new Background(new BackgroundFill(Color.gray(0.4, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
-
-		scene12 = new Scene(layout12);
-		errorWindow.setScene(scene12);
-		errorWindow.setTitle("Error");
-		errorMessage = new Text(
-				"You need to have a scenario name, at least one braille cell and one answer button to start creating a scenario");
-		errorMessage.setFill(Color.WHITE);
-		layout12.add(errorMessage, 0, 0, 2, 1);
-		errorMessageButton = new Button("Okay");
-		errorMessageButton.setStyle("-fx-base: #87ceeb;"); // sky blue
-		errorMessageButton.setAccessibleRoleDescription("Okay button");
-		errorMessageButton.setAccessibleText(
-				"Make sure you have given your scenario a name, that the braille cell field contains a number higher than one "
-						+ "and that the answer buttons available field contains a number higher than one press enter to return to previous window");
-		layout12.add(errorMessageButton, 2, 1);
-
-		// action event
-		errorMessageButton.setOnAction(e1 -> {
-			errorWindow.close();
-		});
-		errorMessageButton.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.ENTER) {
-				errorWindow.close();
-			}
-		});
-	}
-
-	// -- combobox
-	private void comboBoxOpen() {
-		comboBox.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.DOWN) {
-				comboBox.show();
-			}
-		});
-	}
 
 	private void scenarioMenuButton() {
 		// manage scenario button
@@ -1274,6 +1185,12 @@ public class ScenarioCreator extends Application {
 		scenarioMenuButton.setStyle("-fx-base: #FFFFFF;"); // white
 		layout.add(scenarioMenuButton, 7, 1);
 	}
+	
+	/*.*
+	 * comboBox
+	 * 
+	 * 
+	 */
 
 	private void createSectionComboBox() {
 		// ComboBox (drop down menu)
@@ -1283,6 +1200,14 @@ public class ScenarioCreator extends Application {
 		comboBox.setPromptText("Select a section");
 		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
+	}
+	
+	private void comboBoxOpen() {
+		comboBox.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.DOWN) {
+				comboBox.show();
+			}
+		});
 	}
 
 	public static void main(String[] args) {
@@ -1317,7 +1242,7 @@ public class ScenarioCreator extends Application {
 		 * 
 		 * 
 		 *
-		 ************ Other Scenes and Action Events *********************
+		 * --------------------<{Other Scenes and Action Events
 		 * 
 		 * 
 		 * 
@@ -1325,7 +1250,6 @@ public class ScenarioCreator extends Application {
 		 */
 
 		comboBoxOpen();
-		nameOrBrailleFieldEmptyWindow();
 		setupScenarioGUI(primaryStage);
 		soundGUISetup();
 
@@ -1345,16 +1269,16 @@ public class ScenarioCreator extends Application {
 		 * 
 		 * 
 		 */
-
-		notANumberWindowSetup();
+		nameOrBrailleFieldEmptyWindow();
+		notANumberWindowGUI();
 		brailleFieldErrorGUI();
 		sectionEmptyErrorGUI();
 		buttonsUsedErrorGUI();
 		storyEmptyErrorGUI();
 		noSectionErrorGUI();
 		clearSectionWarningGUI();
-		soundErrorWindowSetup();
-;
+		soundErrorWindowGUI();
+		;
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1392,8 +1316,8 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		/*
-		 * --------<<[ clear section button
+		/**
+		 * clear section button
 		 * 
 		 * 
 		 * 
@@ -1417,8 +1341,8 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		/*
-		 * ----------<<[ return selected comboBox value
+		/**
+		 * return selected comboBox value
 		 *
 		 *
 		 *
@@ -1426,14 +1350,8 @@ public class ScenarioCreator extends Application {
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
 
 			if (comboBox.getValue() == "New Section") {
-
-				nameSectionField.clear();
-				storyText.clear();
-				correctText.clear();
-				incorrectText.clear();
-				brailleText.clear();
-				answerText.clear();
-				answerButtonsUsedField.clear();
+				
+				clearSectionWarning.show();
 
 			} else {
 
@@ -1642,12 +1560,105 @@ public class ScenarioCreator extends Application {
 
 	// ------------------------<<<{methods}
 
-	/*
-	 * ----<<[save section]
+	/**
+	 * test scenario from opening window
 	 * 
-	 * sorry this code looks kinda ugly :(
 	 * 
 	 */
+
+	private void runTest(Stage primaryStage, Stage playerSelectionWindow, RadioButton visualButton,
+			RadioButton audioButton) {
+		primaryStage.close();
+		playerSelectionWindow.show();
+
+		visualButton.setOnAction(e2 -> {
+			playerSelectionWindow.close();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Scenario File");
+			File file = fileChooser.showOpenDialog(primaryStage);
+			ScenarioParser s = new ScenarioParser(true);
+			s.setScenarioFile(file.getAbsolutePath());
+		});
+
+		audioButton.setOnAction(e3 -> {
+			playerSelectionWindow.close();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Scenario File");
+			File file = fileChooser.showOpenDialog(primaryStage);
+			ScenarioParser s = new ScenarioParser(false);
+			s.setScenarioFile(file.getAbsolutePath());
+		});
+	}
+
+	/**
+	 * creating / naming new scenario
+	 * 
+	 * 
+	 * 
+	 */
+	private void nameNewScenario(Stage scenarioCreator, Stage errorWindow, Stage brailleCellsUsedWindow,
+			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
+		if (scenarioNameField.getText().isEmpty() || brailleCellsField.getText().isEmpty()
+				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[0-9]+")
+				|| !answerButtonsField.getText().matches("[0-9]+") || Integer.parseInt(brailleCellsField.getText()) == 0
+				|| Integer.parseInt(answerButtonsField.getText()) == 0) {
+			errorWindow.show();
+		} else {
+			try {
+				scenarioCreator.show();
+				brailleCellsUsedWindow.close();
+			} catch (NumberFormatException e3) {
+				errorWindow.show();
+				e3.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * load fields from combobox
+	 * 
+	 * 
+	 */
+
+	private void fillFields(TextField nameSectionField, TextArea storyText, TextField brailleText, TextField answerText,
+			TextArea correctText, TextArea incorrectText, TextField answerButtonsField) {
+		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).story = storyText.getText();
+		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).correctResponse = correctText
+				.getText();
+		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).wrongResponse = incorrectText
+				.getText();
+		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).cells = brailleText.getText();
+		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).answer = Integer
+				.parseInt(answerText.getText());
+		blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).buttonsUsed = Integer
+				.parseInt(answerButtonsField.getText());
+	}
+
+	/**
+	 * clear section
+	 * 
+	 * 
+	 */
+
+	private void clearSection() {
+		nameSectionField.clear();
+		storyText.clear();
+		correctText.clear();
+		incorrectText.clear();
+		brailleText.clear();
+		answerText.clear();
+		answerButtonsUsedField.clear();
+		clearSectionWarning.close();
+		nameSectionField.requestFocus();
+	}
+
+	/**
+	 * save section
+	 * 
+	 * 
+	 * 
+	 */
+
 	private void saveSection(TextField nameSectionField, TextField answerButtonsUsedField, TextArea storyText,
 			TextField brailleText, TextField answerText, TextArea correctText, TextArea incorrectText,
 			ObservableList<String> comboBoxList, ComboBox<String> comboBox, TextField brailleCellsField,
@@ -1697,7 +1708,7 @@ public class ScenarioCreator extends Application {
 									.parseInt(answerButtonsField.getText())) {
 						buttonsUsedWindow.show();
 					}
-					if (storyText.getText().length() == 0) {
+					else if (storyText.getText().length() == 0) {
 						emptyStoryWindow.show();
 					}
 
@@ -1705,6 +1716,7 @@ public class ScenarioCreator extends Application {
 			}
 
 		}
+
 	}
 
 }

@@ -34,6 +34,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -75,6 +76,12 @@ public class ScenarioCreator extends Application {
 	ObservableList<String> comboBoxList;
 	ComboBox<String> comboBox;
 	RadioButton audioButton, visualButton;
+	private Stage recordWindow;
+	private Scene recordScene;
+	private Button record;
+	private GridPane recordLayout;
+	private Button exitButton;
+	private boolean recording;
 
 	/*
 	 * GUI for start Window / primary stage
@@ -992,7 +999,7 @@ public class ScenarioCreator extends Application {
 		soundRecord.setMinSize(150, 70);
 		soundRecord.setStyle("-fx-base: #87ceeb;"); // sky blue
 		soundRecord.setAccessibleRoleDescription("Record sound button");
-		soundRecord.setAccessibleText("Press enter to start recording sound");
+		soundRecord.setAccessibleText("Press enter to record your own sound");
 		layout2.add(soundRecord, 0, 1);
 		soundImport = new Button("Import sound");
 		soundImport.setMinSize(150, 70);
@@ -1019,13 +1026,94 @@ public class ScenarioCreator extends Application {
 		// Action Listener for soundImport
 		soundImport.setOnAction(e -> {
 			copySoundFile();
+			soundWindow.close();
 		});
 
 		soundImport.setOnKeyReleased(e -> {
-			if (e.getCode() == KeyCode.ENTER)
+			if (e.getCode() == KeyCode.ENTER) {
 				copySoundFile();
+				soundWindow.close();
+				}
+		});
+		
+		soundRecord.setOnAction(e -> {
+			recordSoundGUI();
+			soundWindow.close();
 		});
 
+		soundRecord.setOnKeyReleased(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				soundWindow.close();
+				recordSoundGUI();
+			}
+				
+		});
+
+	}
+	
+	private void recordSoundGUI() {
+		recordWindow = new Stage();
+		recordWindow.setTitle("Record");
+		recordLayout = new GridPane();
+		recordLayout.setHgap(10);
+		recordLayout.setVgap(10);
+		recordLayout.setPadding(new Insets(20, 20, 20, 20));
+		recordLayout.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.5, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		recordScene = new Scene(recordLayout);
+		recordWindow.setScene(recordScene);
+		record = new Button("Start Recording");
+		record.setMinSize(150, 70);
+		record.setStyle("-fx-base: #87ceeb;"); // sky blue
+		record.setAccessibleRoleDescription("Recording Sound");
+		record.setAccessibleText("Press enter to start recording sound");
+		recordLayout.add(record, 0, 1);
+		
+		exitButton = new Button("Exit");
+		exitButton.setMinSize(150, 70);
+		exitButton.setStyle("-fx-base: #ffffff"); // sky blue
+		exitButton.setAccessibleRoleDescription("Exit sound window button");
+		exitButton.setAccessibleText("Press enter to exit sound window");
+		
+		recordLayout.add(exitButton, 3, 1);
+		recordWindow.show();
+		
+		exitButton.setOnAction(e -> {
+			recordWindow.close();
+		});
+		
+		exitButton.setOnKeyReleased(e -> {
+			if(e.getCode() == KeyCode.ENTER) {
+				recordWindow.close();
+			}
+		});
+		
+		//Name of file needs to go in this constructor
+		SoundRecorder recorder = new SoundRecorder("recorded");
+		
+		record.setOnAction(e -> {
+			if(recording) {
+				recorder.finish();
+				recording = false;
+			}
+			else {
+				recorder.start();
+				recording = true;
+			}
+		});
+		
+		record.setOnKeyReleased(e -> {
+			if(e.getCode() == KeyCode.ENTER) {
+				if(recording) {
+					recorder.finish();
+					recording = false;
+				}
+				else {
+					recorder.start();
+					recording = true;
+				}
+			}
+		});
 	}
 
 	/*

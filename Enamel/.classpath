@@ -7,6 +7,20 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="freetts.jar"/>
+	<classpathentry kind="lib" path="lib/assertj-core-3.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/cmu_time_awb.jar"/>
+	<classpathentry kind="lib" path="lib/cmu_us_kal.jar"/>
+	<classpathentry kind="lib" path="lib/cmudict04.jar"/>
+	<classpathentry kind="lib" path="lib/cmulex.jar"/>
+	<classpathentry kind="lib" path="lib/cmutimelex.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/en_us.jar"/>
+	<classpathentry kind="lib" path="lib/freetts-jsapi10.jar"/>
+	<classpathentry kind="lib" path="lib/jsapi.exe"/>
+	<classpathentry kind="lib" path="lib/jsapi.jar"/>
+	<classpathentry kind="lib" path="lib/jsapi.sh"/>
+	<classpathentry kind="lib" path="lib/mbrola.jar"/>
+	<classpathentry kind="lib" path="lib/voices.txt"/>
+	<classpathentry kind="lib" path="lib/freetts.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

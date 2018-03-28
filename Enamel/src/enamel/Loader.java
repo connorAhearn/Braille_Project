@@ -16,6 +16,7 @@ public class Loader {
 	ArrayList<String> buttonOrder = new ArrayList<String>();
 	String stringBasedBoolean = "story";
 	Boolean inText = false;
+	Boolean initialBlock = true;
 	
 	// the file scanners we shall use.
 	private Scanner fileScanner;
@@ -50,7 +51,7 @@ public class Loader {
 			
 			// this keeps nextLineCheck, one line ahead of fileScanner
 			nextLineCheck.nextLine();
-			for (int i=0; i<3; i++) {
+			for (int i=0; i<4; i++) {
 				if (fileScanner.hasNextLine()&&nextLineCheck.hasNextLine()) {
 					nextLineCheck.nextLine();
 					fileScanner.nextLine();
@@ -73,7 +74,7 @@ public class Loader {
 			} // this may require EOF exception
 			interpretLine(fileLine, lineAfter);
 		}
-		
+		blocklist.add(new Block(holdOn)); // last block of file
 		fileScanner.close();
 		nextLineCheck.close();
 		
@@ -88,15 +89,20 @@ public class Loader {
 				return;
 			}
 			
-			//else if() {
+			else if(initialBlock) {
+				setName(nextLine.substring(2));
+				initialBlock = false;
 				
-			//}
+
+			}
 			
 			else {
 				blocklist.add(new Block(holdOn));
 				stringBasedBoolean = "story";
 				inText = false;
 				blockClear();
+				buttonOrder.clear();
+				setName(nextLine.substring(2));
 			}
 			
 		}
@@ -113,7 +119,7 @@ public class Loader {
 			}
 		}
 		
-		else if(line.length() >= 14 && line.substring(0, 14).equals("/~Skip-button:")) {
+		else if(line.length() >= 14 && line.substring(0, 14).equals("/~skip-button:")) {
 			
 			String[] param;
 			param = line.substring(14).split("\\s"); // possible mistake
@@ -122,7 +128,7 @@ public class Loader {
 			
 			if (nextLine.length() >= 14 ) {
 				// possible issues with this condition 
-				if(!(nextLine.substring(0, 14).equals("/~Skip-button:"))) {	
+				if(!(nextLine.substring(0, 14).equals("/~skip-button:"))) {	
 					setButtonsUsed(param[0]);
 				}
 			}
@@ -239,6 +245,7 @@ public class Loader {
 	public void clear() {
 		blocklist.clear();
 		blockClear();
+		buttonOrder.clear();
 		
 	}
 	

@@ -399,12 +399,11 @@ public class ScenarioParser {
 		try {
 			// this scanner is going to lead file scanner by one line
 			// gives audio player ability to see next line 
-		for (int i=0; i<=2; i++) {	
+		for (int i=0; i<=4; i++) {	
 			if (nextLineCheck.hasNextLine()) {
 				nextLineCheck.nextLine();
 			}
-		}	
-			
+		}
 			while (fileScanner.hasNextLine()) {
 				
 
@@ -533,6 +532,8 @@ public class ScenarioParser {
 		try {
 			cellNum = Integer.parseInt(fileScanner.nextLine().split("\\s")[1]);
 			buttonNum = Integer.parseInt(fileScanner.nextLine().split("\\s")[1]);
+			fileScanner.nextLine();
+			performAction(fileScanner.nextLine());
 			if (isVisual)
 			    player = new VisualPlayer(cellNum, buttonNum);
 			else

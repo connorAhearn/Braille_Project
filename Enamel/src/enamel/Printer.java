@@ -240,7 +240,7 @@ public class Printer {
 	*/
 	
 	private void addSectionName(String sectionName) {
-		addConfig(sectionName.toUpperCase());
+		addConfig(sectionName);
 	}
 	
 	private void nextSection(Block block) {

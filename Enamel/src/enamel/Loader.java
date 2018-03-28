@@ -90,6 +90,7 @@ public class Loader {
 			}
 			
 			else if(initialBlock) {
+				blockClear();
 				setName(nextLine.substring(2));
 				initialBlock = false;
 				
@@ -214,7 +215,7 @@ public class Loader {
 	}
 
 	private void setAnswer(int a) {
-		holdOn.answer = a;
+		holdOn.answer = a+1;
 	}
 
 	private void setCell(String c) {

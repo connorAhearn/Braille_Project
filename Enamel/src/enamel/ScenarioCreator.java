@@ -108,7 +108,7 @@ public class ScenarioCreator extends Application {
 		createButton.setMinSize(150, 60);
 		createButton.setStyle("-fx-base: #87ceeb;"); // sky blue
 		createButton.setAccessibleRoleDescription("Create new scenario button");
-		createButton.setAccessibleText("Welcome to scenario creator, To create a new scenario press enter");
+		createButton.setAccessibleText("Welcome to scenario creator, <>To create a new scenario press enter");
 		layout1.add(createButton, 0, 6);
 		testButton = new Button("Test Scenario");
 		testButton.setMinSize(150, 60);
@@ -424,30 +424,25 @@ public class ScenarioCreator extends Application {
 		layout.add(menuBar, 0, 0, 8, 1);
 	}
 
+	/**
+	 * Sound menu
+	 * 
+	 * 
+	 */
 	private void createSoundMenu() {
-		/*
-		 * Sound menu
-		 * 
-		 * 
-		 * add sound
-		 * 
-		 * 
-		 */
+
 		soundMenu = new Menu("Sound");
-
 		addSound = new MenuItem("Add Sound");
-
 		soundMenu.getItems().add(addSound);
 	}
 
+	/**
+	 * visual or audio
+	 * 
+	 * 
+	 */
+	
 	private void visualOrAudioPlayerGUI() {
-		/*
-		 * 
-		 * 
-		 * Pop up window : Choose between audio / visual player for testing
-		 * 
-		 * 
-		 */
 
 		playerSelectionWindow = new Stage();
 		layout9 = new GridPane();
@@ -479,51 +474,15 @@ public class ScenarioCreator extends Application {
 		layout9.add(audioButton, 1, 2);
 	}
 
-	private void newProjectWarningGUI() {
-		/*
-		 * new project warning window GUI
-		 * 
-		 * 
-		 * warning that every field will be cleared
-		 * 
-		 * 
-		 */
-
-		warningWindow = new Stage();
-		layout10 = new GridPane();
-		layout10.setHgap(10);
-		layout10.setVgap(10);
-		layout10.setPadding(new Insets(5, 5, 5, 5));
-
-		scene10 = new Scene(layout10);
-		warningWindow.setScene(scene10);
-		warningWindow.setTitle("Warning");
-		warningText = new Text(
-				"	       Are you sure you want to start a new project?\n			any unsaved projects will be lost");
-		warningText.setFill(Color.WHITE);
-		layout10.add(warningText, 0, 0, 2, 2);
-		warningOkay = new Button("Okay");
-		warningOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
-		warningOkay.setAccessibleRoleDescription("Okay button");
-		warningOkay.setAccessibleText(
-				"Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
-		layout10.add(warningOkay, 0, 4);
-		warningCancel = new Button("Cancel");
-		warningCancel.setStyle("-fx-base: #ffffff;");
-		warningCancel.setAccessibleRoleDescription("Cancel button");
-		warningCancel.setAccessibleText("Press enter to return to main window");
-		layout10.add(warningCancel, 2, 4);
-		layout10.setBackground(
-				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
-	}
-
+	
+	/**
+	 * confirm section save GUI
+	 * 
+	 * 
+	 * 
+	 */
+	
 	private void savingSectionGUI() {
-		/*
-		 * confirm section save GUI
-		 * 
-		 * 
-		 * 
-		 */
 
 		saveWindow = new Stage();
 		layout7 = new GridPane();
@@ -588,13 +547,54 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/**
+	 * ----------------------<[warning and error GUIs]
+	 */
+	/**
+	 * new project warning window GUI
+	 * 
+	 * 
+	 * warning that every field will be cleared
+	 * 
+	 */
+	
+	private void newProjectWarningGUI() {
+
+		warningWindow = new Stage();
+		layout10 = new GridPane();
+		layout10.setHgap(10);
+		layout10.setVgap(10);
+		layout10.setPadding(new Insets(5, 5, 5, 5));
+
+		scene10 = new Scene(layout10);
+		warningWindow.setScene(scene10);
+		warningWindow.setTitle("Warning");
+		warningText = new Text(
+				"	       Are you sure you want to start a new project?\n			any unsaved projects will be lost");
+		warningText.setFill(Color.WHITE);
+		layout10.add(warningText, 0, 0, 2, 2);
+		warningOkay = new Button("Okay");
+		warningOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
+		warningOkay.setAccessibleRoleDescription("Okay button");
+		warningOkay.setAccessibleText(
+				"Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
+		layout10.add(warningOkay, 0, 4);
+		warningCancel = new Button("Cancel");
+		warningCancel.setStyle("-fx-base: #ffffff;");
+		warningCancel.setAccessibleRoleDescription("Cancel button");
+		warningCancel.setAccessibleText("Press enter to return to main window");
+		layout10.add(warningCancel, 2, 4);
+		layout10.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+	}
+
+	/**
+	 * confirm section clear GUI
+	 * 
+	 * 
+	 * 
+	 */
 	private void clearSectionWarningGUI() {
-		/*
-		 * confirm section clear GUI
-		 * 
-		 * 
-		 * 
-		 */
 
 		clearSectionWarning = new Stage();
 		layout15 = new GridPane();
@@ -706,7 +706,7 @@ public class ScenarioCreator extends Application {
 		scene5 = new Scene(layout5);
 		emptyStoryWindow.setScene(scene5);
 		emptyStoryWindow.setTitle("Story field is empty");
-		emptyStoryText = new Text("Section can not be saved\nif the story field is empty");
+		emptyStoryText = new Text("Section can not be saved if the story field is empty");
 		emptyStoryText.setFill(Color.WHITE);
 		layout5.add(emptyStoryText, 0, 0, 2, 1);
 		emptyStoryOkay = new Button("Okay");
@@ -1017,10 +1017,10 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
-	/*
+	/**
+	 * sound button 
 	 * 
-	 * pop up window adding sound
-	 * 
+	 * record / import / exit
 	 * 
 	 * 
 	 */

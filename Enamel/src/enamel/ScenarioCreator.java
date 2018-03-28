@@ -49,8 +49,8 @@ public class ScenarioCreator extends Application {
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
 			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18;
-	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10,
-			scene11, scene12, scene13, scene14, scene15, scene16, scene17, scene18;
+	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12,
+			scene13, scene14, scene15, scene16, scene17, scene18;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
 			okayStart, warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay,
 			emptyNameButton, buttonsUsedWindowOkay, emptyStoryOkay, noSectionSavedOkay, saveOkayButton,
@@ -63,7 +63,8 @@ public class ScenarioCreator extends Application {
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
-			saveConfirmed, playerSelectionText, projectSavedConfirmed, clearSectionText, soundErrorText, soundNameText, soundNameErrorText;
+			saveConfirmed, playerSelectionText, projectSavedConfirmed, clearSectionText, soundErrorText, soundNameText,
+			soundNameErrorText;
 	Label nameSectionLabel, answerButtonsUsedFieldLabel, storyLabel, brailleLabel, answerLabel, correctLabel,
 			playerLabel, incorrectLabel, scenarioNameFieldLabel, brailleCellsUsedLabel, answerButtonsUsedLabel;
 	Menu scenarioMenu, sectionMenu, goToMenu, soundMenu;
@@ -83,8 +84,6 @@ public class ScenarioCreator extends Application {
 	private GridPane recordLayout;
 	private Button exitButton;
 	private boolean recording;
-
-
 
 	/*
 	 * GUI for start Window / primary stage
@@ -310,15 +309,12 @@ public class ScenarioCreator extends Application {
 		sound.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				soundWindow.show();
-			} else {
-				if (e.getCode() == KeyCode.CONTROL) {
-					sound.setOnKeyPressed(e1 -> {
-						if (e1.getCode() == KeyCode.TAB) {
-							correctText.requestFocus();
-						}
-					});
-				}
 			}
+		});
+
+		sound.setOnKeyPressed(e -> {
+			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
+			correctText.requestFocus();
 		});
 	}
 
@@ -896,7 +892,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
-	
+
 	/**
 	 * section name empty GUI
 	 * 
@@ -925,7 +921,7 @@ public class ScenarioCreator extends Application {
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 		nameSoundErrorButton.setAccessibleRoleDescription("Okay button");
 		nameSoundErrorButton.setAccessibleText(
-				"Sound file can not be saved unless it has a name, press enter to go back to previous window");
+				"Sound file can not be saved unless it has a name, press enter to return to previous window");
 
 		// action event
 		nameSoundErrorButton.setOnAction(e1 -> {
@@ -1145,13 +1141,19 @@ public class ScenarioCreator extends Application {
 			if (soundNameField.getText().length() == 0) {
 				nameSoundErrorWindow.show();
 			} else {
-			recordWindow.show();
+				recordWindow.show();
+				nameSoundFileWindow.close();
 			}
 		});
 
 		soundNameOkay.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				recordWindow.show();
+				if (soundNameField.getText().length() == 0) {
+					nameSoundErrorWindow.show();
+				} else {
+					recordWindow.show();
+					nameSoundFileWindow.close();
+				}
 			}
 		});
 
@@ -1207,6 +1209,7 @@ public class ScenarioCreator extends Application {
 		});
 
 		// Name of file needs to go in this constructor
+		String nameOfSoundFile = soundNameField.getText() + ".wav";
 		SoundRecorder recorder = new SoundRecorder("recorded");
 
 		record.setOnAction(e -> {
@@ -1278,10 +1281,11 @@ public class ScenarioCreator extends Application {
 				}
 
 			}
+			// Tell the user the file was imported, show how they use <> brackets
+			// <example.wav>
 		}
 
 		else {
-			// Needs to tell user they should have used .wav file.
 			soundErrorWindow.show();
 		}
 
@@ -1449,7 +1453,6 @@ public class ScenarioCreator extends Application {
 		scenarioMenuButton();
 		comboBoxOpen();
 
-
 		/*
 		 * 
 		 * 
@@ -1529,6 +1532,11 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
+		saveButton.setOnKeyPressed(e -> {
+			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
+			clearSectionButton.requestFocus();
+		});
+
 		/**
 		 * clear section button
 		 * 
@@ -1541,17 +1549,14 @@ public class ScenarioCreator extends Application {
 
 		clearSectionButton.setOnKeyPressed(e -> {
 
-			if (e.getCode() == KeyCode.CONTROL) {
-				clearSectionButton.setOnKeyPressed(e1 -> {
-					if (e1.getCode() == KeyCode.TAB) {
-						comboBox.requestFocus();
-					}
-				});
-			} else {
-				if (e.getCode() == KeyCode.ENTER) {
-					clearSectionWarning.show();
-				}
+			if (e.getCode() == KeyCode.ENTER) {
+				clearSectionWarning.show();
 			}
+		});
+
+		clearSectionButton.setOnKeyPressed(e -> {
+			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
+			comboBox.requestFocus();
 		});
 
 		/**
@@ -1584,6 +1589,22 @@ public class ScenarioCreator extends Application {
 			}
 
 		});
+		
+		comboBox.setOnKeyPressed(e -> {
+			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
+			scenarioMenuButton.requestFocus();
+		});
+		
+		
+		
+		/**
+		 * scenario menu button
+		 */
+		scenarioMenuButton.setOnKeyPressed(e -> {
+			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
+			nameSectionField.requestFocus();
+		});
+		
 
 		/*
 		 * ---------<{scenario menu action

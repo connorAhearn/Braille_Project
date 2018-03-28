@@ -69,7 +69,7 @@ public class SoundRecorder {
 	}
 	
 	public void setRecordTime(long time) {
-		
+		recordTime = time;
 	}
 	
 	public void finish() {
@@ -78,7 +78,7 @@ public class SoundRecorder {
 		System.out.println("Finished");
 	}
 	
-	public static void main(String[] args) {
+	public void record() {
 		
 		final SoundRecorder recorder = new SoundRecorder("test");
 		

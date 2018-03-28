@@ -1211,35 +1211,16 @@ public class ScenarioCreator extends Application {
 		});
 
 		// Name of file needs to go in this constructor
-		String nameOfSoundFile = soundNameField.getText() + ".wav";
-		SoundRecorder recorder = new SoundRecorder("recorded");
+		String nameOfSoundFile = soundNameField.getText();
+		SoundRecorder recorder = new SoundRecorder(nameOfSoundFile);
 
 		record.setOnAction(e -> {
-			if (recording) {
-				recorder.finish();
-				recording = false;
-				recordWindow.close();
-			} else {
-				recorder.start();
-				recording = true;
-				record.setText("Stop recording");
-				record.setAccessibleRoleDescription("End Recording");
-				record.setAccessibleText("Press enter to end the recording");
-			}
+			recorder.record();
 		});
 
 		record.setOnKeyReleased(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				if (recording) {
-					recorder.finish();
-					recording = false;
-				} else {
-					recorder.start();
-					recording = true;
-					record.setText("Stop recording");
-					record.setAccessibleRoleDescription("End Recording");
-					record.setAccessibleText("Press enter to end the recording");
-				}
+				recorder.record();
 			}
 		});
 	}

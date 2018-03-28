@@ -108,7 +108,7 @@ public class ScenarioCreator extends Application {
 		createButton.setMinSize(150, 60);
 		createButton.setStyle("-fx-base: #87ceeb;"); // sky blue
 		createButton.setAccessibleRoleDescription("Create new scenario button");
-		createButton.setAccessibleText("Welcome to scenario creator, <>To create a new scenario press enter");
+		createButton.setAccessibleText("Welcome to scenario creator, sound .wav to create a new scenario press enter");
 		layout1.add(createButton, 0, 6);
 		testButton = new Button("Test Scenario");
 		testButton.setMinSize(150, 60);
@@ -169,15 +169,16 @@ public class ScenarioCreator extends Application {
 		sectionMenu.getItems().add(clearSection);
 	}
 
+	/**
+	 * Go to
+	 * 
+	 * 
+	 * Goes to text field or area
+	 * 
+	 * 
+	 */
 	private void createGotoMenu() {
-		/*
-		 * Go to
-		 * 
-		 * 
-		 * Goes to text field or area
-		 * 
-		 * 
-		 */
+
 		goToMenu = new Menu("Go To");
 
 		goToSectionName = new MenuItem("Section Name");
@@ -409,14 +410,15 @@ public class ScenarioCreator extends Application {
 		borderGlow.setOffsetY(0f);
 	}
 
+	/**
+	 * menu bar
+	 * 
+	 * Scenario Section Go to
+	 * 
+	 * 
+	 */
+	
 	private void createMenuBar() {
-		/*
-		 * menu bar
-		 * 
-		 * Scenario Section Go to
-		 * 
-		 * 
-		 */
 
 		menuBar = new MenuBar();
 		menuBar.getMenus().addAll(scenarioMenu, sectionMenu, goToMenu, soundMenu);

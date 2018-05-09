@@ -34,7 +34,8 @@ public class ScenarioParser {
 		//String currDir = System.getProperty("user.dir");
         //System.setProperty("mbrola.base", currDir + File.separator + "lib/mbrola.jar");
         vm = VoiceManager.getInstance();
-        voice = vm.getVoice ("kevin16");
+        voice = vm.getVoice ("Kevin16");
+        System.out.println(vm==null);
         voice.allocate();
         repeatedText = new ArrayList<String> ();
         userInput = false;

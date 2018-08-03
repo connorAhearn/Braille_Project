@@ -41,6 +41,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import java.util.logging.*;
 
 public class ScenarioCreator extends Application {
 
@@ -48,23 +49,23 @@ public class ScenarioCreator extends Application {
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
-			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18;
+			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19;
 	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12,
-			scene13, scene14, scene15, scene16, scene17, scene18;
+			scene13, scene14, scene15, scene16, scene17, scene18, scene19;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
 			okayStart, warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay,
 			emptyNameButton, buttonsUsedWindowOkay, emptyStoryOkay, noSectionSavedOkay, saveOkayButton,
 			scenarioSavedOkay, clearSectionButtonOkay, clearSectionButtonCancel, soundErrorButton, soundNameOkay,
-			soundNameCancel, nameSoundErrorButton;
+			soundNameCancel, nameSoundErrorButton, soundImportedOkay;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
 			scenarioSavedWindow, warningWindow, playerSelectionWindow, scenarioMenuWindow, soundErrorWindow,
-			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow;
+			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow, soundImportedWindow;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
 			saveConfirmed, playerSelectionText, projectSavedConfirmed, clearSectionText, soundErrorText, soundNameText,
-			soundNameErrorText;
+			soundNameErrorText, soundTimeText, soundImportedText;
 	Label nameSectionLabel, answerButtonsUsedFieldLabel, storyLabel, brailleLabel, answerLabel, correctLabel,
 			playerLabel, incorrectLabel, scenarioNameFieldLabel, brailleCellsUsedLabel, answerButtonsUsedLabel;
 	Menu scenarioMenu, sectionMenu, goToMenu, soundMenu;
@@ -73,7 +74,7 @@ public class ScenarioCreator extends Application {
 	MenuBar menuBar;
 	DropShadow borderGlow;
 	TextField nameSectionField, answerButtonsUsedField, brailleText, answerText, scenarioNameField, brailleCellsField,
-			answerButtonsField, soundNameField;
+			answerButtonsField, soundNameField, soundTimeField;
 	TextArea storyText, correctText, incorrectText;
 	ObservableList<String> comboBoxList;
 	ComboBox<String> comboBox;
@@ -84,6 +85,7 @@ public class ScenarioCreator extends Application {
 	private GridPane recordLayout;
 	private Button exitButton;
 	private boolean recording;
+	Integer recordingTime;
 
 	/*
 	 * GUI for start Window / primary stage
@@ -417,7 +419,7 @@ public class ScenarioCreator extends Application {
 	 * 
 	 * 
 	 */
-	
+
 	private void createMenuBar() {
 
 		menuBar = new MenuBar();
@@ -443,7 +445,7 @@ public class ScenarioCreator extends Application {
 	 * 
 	 * 
 	 */
-	
+
 	private void visualOrAudioPlayerGUI() {
 
 		playerSelectionWindow = new Stage();
@@ -476,14 +478,13 @@ public class ScenarioCreator extends Application {
 		layout9.add(audioButton, 1, 2);
 	}
 
-	
 	/**
 	 * confirm section save GUI
 	 * 
 	 * 
 	 * 
 	 */
-	
+
 	private void savingSectionGUI() {
 
 		saveWindow = new Stage();
@@ -559,7 +560,7 @@ public class ScenarioCreator extends Application {
 	 * warning that every field will be cleared
 	 * 
 	 */
-	
+
 	private void newProjectWarningGUI() {
 
 		warningWindow = new Stage();
@@ -1020,7 +1021,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * sound button 
+	 * sound button
 	 * 
 	 * record / import / exit
 	 * 
@@ -1096,6 +1097,45 @@ public class ScenarioCreator extends Application {
 
 	}
 
+	private void soundImportedGUI() {
+
+		soundImportedWindow = new Stage();
+		layout19 = new GridPane();
+		layout19.setHgap(10);
+		layout19.setVgap(10);
+		layout19.setPadding(new Insets(0, 5, 5, 5));
+
+		scene19 = new Scene(layout19);
+		soundImportedWindow.setScene(scene19);
+		soundImportedWindow.setTitle("Sound File Imported");
+		soundImportedText = new Text(
+				"Sound file was successfully imported\n\nTo add the sound file into your story, type the name of the sound file including the .wav extension, surrounded by angle brackets. For example: <sound.wav>");
+		soundImportedText.setFill(Color.WHITE);
+		layout19.add(soundImportedText, 0, 0);
+
+		soundImportedOkay = new Button("Okay");
+		soundImportedOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundImportedOkay.setAccessibleRoleDescription("Okay Button");
+		soundImportedOkay.setAccessibleText(
+				"Sound file was successfully imported, to add the sound file into your story, type the name of the sound file including the .wav extension, surrounded by angle brackets. For example, to add a file named sound .wav, type less than symbol sound period w a v greater than symbol");
+		layout19.add(soundImportedOkay, 1, 1);
+
+		layout19.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		// action events
+		soundImportedOkay.setOnAction(e1 -> {
+			soundImportedWindow.close();
+		});
+
+		soundImportedOkay.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				soundImportedWindow.close();
+			}
+		});
+
+	}
+
 	/**
 	 * name sound file
 	 * 
@@ -1112,9 +1152,9 @@ public class ScenarioCreator extends Application {
 		layout17.setPadding(new Insets(20, 20, 20, 20));
 		layout17.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.5, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
-
 		scene17 = new Scene(layout17);
 		nameSoundFileWindow.setScene(scene17);
+
 		soundNameText = new Text("Name your sound file");
 		soundNameText.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		soundNameText.setFill(Color.GHOSTWHITE);
@@ -1126,17 +1166,29 @@ public class ScenarioCreator extends Application {
 		soundNameField.setPrefWidth(70);
 		layout17.add(soundNameField, 0, 1, 2, 1);
 
+		soundTimeText = new Text("Length of recording in seconds");
+		soundTimeText.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		soundTimeText.setFill(Color.GHOSTWHITE);
+		layout17.add(soundTimeText, 0, 2);
+
+		soundTimeField = new TextField();
+		soundTimeField.setAccessibleRole(AccessibleRole.TOOLTIP);
+		soundTimeField.setAccessibleRoleDescription(
+				"Enter the length of time you want to record in seconds, this field needs to be a number");
+		soundTimeField.setPrefWidth(70);
+		layout17.add(soundTimeField, 0, 3, 2, 1);
+
 		soundNameOkay = new Button("Okay");
 		soundNameOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
 		soundNameOkay.setAccessibleRoleDescription("Okay button");
 		soundNameOkay.setAccessibleText("Press enter to confirm sound file name");
-		layout17.add(soundNameOkay, 0, 2);
+		layout17.add(soundNameOkay, 0, 4);
 
 		soundNameCancel = new Button("Exit");
 		soundNameCancel.setStyle("-fx-base: #ffffff"); // white
 		soundNameCancel.setAccessibleRoleDescription("Exit button");
 		soundNameCancel.setAccessibleText("Press enter to return to main window");
-		layout17.add(soundNameCancel, 1, 2);
+		layout17.add(soundNameCancel, 1, 4);
 
 		// action events
 		soundNameOkay.setOnAction(e -> {
@@ -1212,7 +1264,13 @@ public class ScenarioCreator extends Application {
 
 		// Name of file needs to go in this constructor
 		String nameOfSoundFile = soundNameField.getText();
-		SoundRecorder recorder = new SoundRecorder(nameOfSoundFile);
+		SoundRecorder recorder;
+		if (soundTimeField.getText().length() == 0 || soundTimeField.getText().matches("[0-9]+")) {
+			recorder = new SoundRecorder(nameOfSoundFile);
+		} else {
+			recordingTime = Integer.parseInt(soundTimeField.getText());
+			recorder = new SoundRecorder(nameOfSoundFile, recordingTime);
+		}
 
 		record.setOnAction(e -> {
 			recorder.record();
@@ -1264,8 +1322,8 @@ public class ScenarioCreator extends Application {
 				}
 
 			}
-			// Tell the user the file was imported, show how they use <> brackets
-			// <example.wav>
+			soundImportedWindow.show();
+
 		}
 
 		else {
@@ -1452,6 +1510,7 @@ public class ScenarioCreator extends Application {
 		nameSoundFileGUI();
 		recordSoundGUI();
 		nameSoundErrorGUI();
+		soundImportedGUI();
 
 		// Scene
 		primaryStage.setTitle("Welcome");
@@ -1572,14 +1631,12 @@ public class ScenarioCreator extends Application {
 			}
 
 		});
-		
+
 		comboBox.setOnKeyPressed(e -> {
 			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
 			scenarioMenuButton.requestFocus();
 		});
-		
-		
-		
+
 		/**
 		 * scenario menu button
 		 */
@@ -1587,7 +1644,6 @@ public class ScenarioCreator extends Application {
 			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
 			nameSectionField.requestFocus();
 		});
-		
 
 		/*
 		 * ---------<{scenario menu action
@@ -1612,7 +1668,6 @@ public class ScenarioCreator extends Application {
 			scenarioNameField.clear();
 			brailleCellsField.clear();
 			answerButtonsField.clear();
-
 		});
 
 		warningOkay.setOnKeyPressed(e1 -> {
